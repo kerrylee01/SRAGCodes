@@ -1,0 +1,3 @@
+g++ -c -std=c++11 -I. CPoint3D.cpp CSpectrum.cpp CIsotropic.cpp CSource.cpp CSpatial.cpp CParticleState.cpp CPoint2D.cpp Source_Fortran.cpp
+gfortran-mp-5 -c main.f
+g++ CPoint3D.o CSpectrum.o CIsotropic.o CSource.o CSpatial.o CParticleState.o CPoint2D.o Source_Fortran.o main.o -L /opt/local/lib/gcc5/ -lgfortran -o Source.exe
