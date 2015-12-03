@@ -9,7 +9,6 @@ addons:
     - cmake 
 install:
   # build dagmc
-  - cd SRAGCodes
   - mkdir bld
   - cd bld
   - cmake ../. -DCMAKE_INSTALL_PREFIX=..
