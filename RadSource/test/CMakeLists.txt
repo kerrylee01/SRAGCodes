@@ -33,6 +33,12 @@ SET_PROPERTY(TARGET radsource_test PROPERTY CXX_STANDARD 11)
 # run the test
 ADD_TEST(NAME RadSourceTest.NoFile COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/this_file_doesnt_exist.txt --gtest_filter=RadSourceTest.SetUp)
 ADD_TEST(NAME RadSourceTest.Setup COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/allflux.dat --gtest_filter=RadSourceTest.SetUp)
+# the only test that doesnt need a file
+ADD_TEST(NAME RadSourceTest.IsotropicDistribution COMMAND radsource_test --gtest_filter=RadSourceTest.IsotropicDistribution)
+ADD_TEST(NAME RadSourceTest.Spectrum COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/Radsource/GCRSource/January2003/January2003H.dat --gtest_filter=RadSourceTest.Spectrum)
+ADD_TEST(NAME RadSourceTest.Spectrum2 COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/allflux.dat --gtest_filter=RadSourceTest.Spectrum2)
+ADD_TEST(NAME RadSourceTest.Source COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/allflux.dat --gtest_filter=RadSourceTest.Source)
+ADD_TEST(NAME RadSourceTest.GCRSource COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/Radsource/GCRSource/January2003/ --gtest_filter=RadSourceTest.GCRSource)
 ADD_TEST(NAME RadSourceTest.Sample COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/allflux.dat --gtest_filter=RadSourceTest.Sample)
 
 	
