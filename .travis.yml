@@ -19,5 +19,6 @@ install:
   - cmake ../. -DCMAKE_INSTALL_PREFIX=..
   - make 
   - make install
-  - make test
+#  - make test
+  - ctest
 # all done
