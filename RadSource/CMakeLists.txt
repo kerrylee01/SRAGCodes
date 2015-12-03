@@ -56,3 +56,14 @@ INSTALL ( TARGETS gcrsource
   LIBRARY DESTINATION "lib"
   ARCHIVE DESTINATION "lib"
   PUBLIC_HEADER DESTINATION "include" )
+
+# add the tests
+add_subdirectory(test)
+
+# Put the test in bin
+INSTALL ( TARGETS "test_main"
+  RUNTIME DESTINATION "bin"
+  LIBRARY DESTINATION "lib"
+  ARCHIVE DESTINATION "lib"
+  PUBLIC_HEADER DESTINATION "include" )
+
