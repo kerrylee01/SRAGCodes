@@ -1,0 +1,18 @@
+language: c++
+sudo: false
+addons:
+  apt:
+    packages:
+    - gfortran 
+    - g++ 
+    - build-essential 
+    - cmake 
+install:
+  # build dagmc
+  - cd SRAGCodes
+  - mkdir bld
+  - cd bld
+  - cmake ../. -DCMAKE_INSTALL_PREFIX=..
+  - make 
+  - make install
+  - make test
