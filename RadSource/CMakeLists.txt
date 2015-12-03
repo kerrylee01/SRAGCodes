@@ -46,9 +46,13 @@ TARGET_LINK_LIBRARIES("test_main" gcrsource)
 # set the headers to install
 SET_TARGET_PROPERTIES( gcrsource PROPERTIES PUBLIC_HEADER "${SRAG_HEADERS}" )
 
+# c++11 support
+add_definitions(-std=c++11)
+
+# this should work!
 # need c++11 support
-SET_PROPERTY(TARGET gcrsource PROPERTY CXX_STANDARD 11)
-SET_PROPERTY(TARGET "test_main" PROPERTY CXX_STANDARD 11)
+#SET_PROPERTY(TARGET gcrsource PROPERTY CXX_STANDARD 11)
+# SET_PROPERTY(TARGET "test_main" PROPERTY CXX_STANDARD 11)
 
 # Put the library in Lib
 INSTALL ( TARGETS gcrsource
