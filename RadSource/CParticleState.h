@@ -6,7 +6,7 @@
 
 class CParticleState {
  public:
-  CParticleState() { }
+  CParticleState();
   ~CParticleState() { Delete(); }
   void Clear();
   void Delete();

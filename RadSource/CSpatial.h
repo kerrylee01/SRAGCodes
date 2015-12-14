@@ -3,6 +3,7 @@
 #define Header_CSpatial
 
 #include <string>
+#include <vector>
 #include <random>
 #include <CPoint3D.h>
 
@@ -19,6 +20,7 @@ class CSpatial {
   CPoint3D* GetDirection() { return m_p_Direction; }
   virtual void Print() = 0;
   virtual void Sample(std::mt19937_64 &gen) = 0;
+  virtual bool Sample(std::vector<double> v_dRandom) = 0;
 
  protected:
   CPoint3D* m_p_Position;

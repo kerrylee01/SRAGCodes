@@ -139,10 +139,12 @@ void CSource::Delete()
 
 void CSource::Sample(std::mt19937_64 &gen, CParticleState* p_ParticleState)
 {
+  //std::cout<<"In CSource::Sample(gen, CParticleState)"<<std::endl;
   std::vector<double>::iterator iter_low;
   std::uniform_real_distribution<> real_dis(0, m_v_dRelativeAbundances.back());
   iter_low = std::lower_bound(m_v_dRelativeAbundances.begin(), m_v_dRelativeAbundances.end(), real_dis(gen) );
   m_v_p_Spectra[iter_low - m_v_dRelativeAbundances.begin() - 1]->Sample(gen, p_ParticleState);
+  //std::cout<<p_ParticleState->GetParticleID()<<"  "<<p_ParticleState->GetEnergy()<<" "<<p_ParticleState->GetWeight()<<std::endl;
   //
   //If biased run by weight take care of spectral weight here
   //
@@ -156,16 +158,35 @@ void CSource::Sample(std::mt19937_64 &gen, CParticleState* p_ParticleState)
     p_ParticleState->SetPosition(m_p_Spatial->GetPosition());
     p_ParticleState->SetDirection(m_p_Spatial->GetDirection());
   }
+  //std::cout<<p_ParticleState->GetParticleID()<<"  "<<p_ParticleState->GetEnergy()<<" "<<p_ParticleState->GetWeight()<<std::endl;
 }
 
-void CSource::SpecSampleExRand(double* d_a_Rand)
+void CSource::Sample(std::vector<double> v_dRan, CParticleState* p_ParticleState)
 {
+  if(v_dRan.size() < 2) {
+    std::cout << "In CSource::Sample the provided random number vector does not contain enough elements to proceed." <<std::endl;
+    return;
+  }
 
+  std::vector<double>::iterator iter_low;
+  double dRandom = m_v_dRelativeAbundances.back() * v_dRan[0];
+  iter_low = std::lower_bound(m_v_dRelativeAbundances.begin(), m_v_dRelativeAbundances.end(), dRandom );
+
+  m_v_p_Spectra[iter_low - m_v_dRelativeAbundances.begin() - 1]->Sample(v_dRan[1], p_ParticleState);
+  //
+  //Now take care of spatial distribution:
+  //
+  std::vector<double> v_dRandom(v_dRan.begin() + 2, v_dRan.end());
+  if(m_p_Spatial != 0x0) {
+    if(m_p_Spatial->Sample(v_dRandom) == false) return;
+    p_ParticleState->SetPosition(m_p_Spatial->GetPosition());
+    p_ParticleState->SetDirection(m_p_Spatial->GetDirection());
+  }
 }
 
 void CSource::Print()
 {
-  std::vector<CSpectrum*>::iterator iter;
-  for (iter = m_v_p_Spectra.begin(); iter != m_v_p_Spectra.end(); ++iter)
+  //std::vector<CSpectrum*>::iterator iter;
+  for (auto iter = m_v_p_Spectra.begin(); iter != m_v_p_Spectra.end(); ++iter)
     (*iter)->Print();
 }

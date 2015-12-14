@@ -11,7 +11,12 @@ bool CSpectrum::Sort(CPoint2D* p_Point1, CPoint2D* p_Point2)
   return p_Point1->GetX() < p_Point2->GetX();
 }
 
+//
+//Potential Constructor to deal with various flux units.  For now lets
+//assume all flux units are the same and there is not a need for this
+//
 //CSpectrum::CSpectrum(std::string sSpecFile, std::string sFluxUnits)
+
 CSpectrum::CSpectrum(std::string sSpecFile, int iParticleID)
 {
   m_dAbundance = 0.0;
@@ -22,7 +27,6 @@ CSpectrum::CSpectrum(std::string sSpecFile, int iParticleID)
     std::cout<<"Error opening file "<<sSpecFile<<std::endl;
     return;
   }
-  //m_v_dFluxes.push_back(0.0);
   while( !(ifSpecFile->eof()) ) {
     *ifSpecFile>>dEnergy>>dFlux;
     if( !(ifSpecFile->good()) ) break;
@@ -30,7 +34,6 @@ CSpectrum::CSpectrum(std::string sSpecFile, int iParticleID)
     dSumFlux+=dFlux;
     m_v_dFluxes.push_back(dSumFlux);
   }
-
   CSpectrum::Set();
 }
 
@@ -49,7 +52,7 @@ CSpectrum::CSpectrum(std::vector<double> v_dEnergy, std::vector<double> v_dFlux,
 
 double CSpectrum::GetFlux(double dEnergy) 
 {
-  std::cout<< "Function not yet implemented" <<std::endl;
+  std::cout<< "Function CSpectrum::GetFlux not yet implemented" <<std::endl;
   
   return 0;
 }
@@ -92,28 +95,33 @@ void CSpectrum::InterpolateLog()
 
 void CSpectrum::Print()
 {
-  std::vector<CPoint2D*>::iterator iter;
-  for (iter = m_v_p_Point2D.begin(); iter != m_v_p_Point2D.end(); ++iter)
+  //std::vector<CPoint2D*>::iterator iter;
+  for (auto iter = m_v_p_Point2D.begin(); iter != m_v_p_Point2D.end(); ++iter)
     (*iter)->Print();
 }
-/*
-ostream& CSpectrum::operator<<(ostream& os, const CSpectrum& rSpectrum)
-{
-  std::vector<CPoint2D*>::iterator iter;
-  for (iter = m_v_p_Point2D.begin(); iter != m_v_p_Point2D.end(); ++iter)
-    os << (*iter);
-    return os;
-}
-*/
 
 void CSpectrum::Sample(std::mt19937_64 &gen, CParticleState* p_ParticleState)
 {
+  //std::cout<<"In CSpectrum::Sample(gen, CParticleState)"<<std::endl;
+  std::uniform_real_distribution<> real_dis(m_v_dFluxes[m_iLowIndex], m_v_dFluxes[m_iUpperIndex]);
+  CSpectrum::DoSampling(real_dis(gen), p_ParticleState);
+}
+
+void CSpectrum::Sample(double dRan, CParticleState* p_ParticleState)
+{
+  double dRandom;
+  dRandom = (m_v_dFluxes[m_iUpperIndex] - m_v_dFluxes[m_iLowIndex]) * dRan + m_v_dFluxes[m_iLowIndex];
+  CSpectrum::DoSampling(dRandom, p_ParticleState);
+}
+
+void CSpectrum::DoSampling(double dRan, CParticleState* p_ParticleState)
+{
+  //std::cout<<"In CSpectrum::DoSampling()"<<std::endl;
   //***************************************************************************
   //There are two options for sampling that we want to support
   //  1) Flat in energy and then weighting the particles by flux/abundance
   //  2) analog which means sampling according to flux/abundance, weight = 1.0
   //***************************************************************************
-  double dRan;
   std::vector<double>::iterator iter_low;
   //
   //Select based on discrete flux CDF - analog discrete sampling
@@ -121,10 +129,10 @@ void CSpectrum::Sample(std::mt19937_64 &gen, CParticleState* p_ParticleState)
   //*********************************************************************
   //analog sampling on defined grid
   //
-  std::uniform_real_distribution<> real_dis(m_v_dFluxes[m_iLowIndex], m_v_dFluxes[m_iUpperIndex]);
-  dRan = real_dis(gen);
+  ////std::uniform_real_distribution<> real_dis(m_v_dFluxes[m_iLowIndex], m_v_dFluxes[m_iUpperIndex]);
+  ////double dRan = real_dis(gen);
   iter_low = std::lower_bound(m_v_dFluxes.begin() + m_iLowIndex, 
-			      m_v_dFluxes.begin() + m_iUpperIndex, dRan);
+			      m_v_dFluxes.begin() + m_iUpperIndex, dRan );
   p_ParticleState->SetEnergy(m_v_p_Point2D[iter_low - m_v_dFluxes.begin() - 1]->GetX());
   //p_ParticleState->SetWeight(1.0);
   
@@ -142,10 +150,11 @@ void CSpectrum::Sample(std::mt19937_64 &gen, CParticleState* p_ParticleState)
   //  - Kerry Lee 8/31/2014
   //
   double x1, x2, y1, y2;
-  x1 = m_v_p_Point2D[iter_low - m_v_dFluxes.begin() - 1]->GetX();
-  x2 = m_v_p_Point2D[iter_low - m_v_dFluxes.begin()]->GetX();
-  y1 = m_v_dFluxes[iter_low - m_v_dFluxes.begin() - 1];
-  y2 = m_v_dFluxes[iter_low - m_v_dFluxes.begin()];
+  int iIndex = iter_low - m_v_dFluxes.begin();
+  x1 = m_v_p_Point2D[iIndex - 1]->GetX();
+  x2 = m_v_p_Point2D[iIndex]->GetX();
+  y1 = m_v_dFluxes[iIndex - 1];
+  y2 = m_v_dFluxes[iIndex];
   x1 = log(x1);
   x2 = log(x2);
   y1 = log(y1);
@@ -178,7 +187,9 @@ void CSpectrum::Sample(std::mt19937_64 &gen, CParticleState* p_ParticleState)
   //****************************************************************************
   
   p_ParticleState->SetParticleID(m_iParticleID);
+  //std::cout<<p_ParticleState->GetParticleID()<<"  "<<p_ParticleState->GetEnergy()<<" "<<p_ParticleState->GetWeight()<<std::endl;
 }
+
 
 void CSpectrum::Set() 
 {
@@ -230,8 +241,8 @@ void CSpectrum::Randomize()
 
 std::ostream &operator<<( std::ostream &output, CSpectrum &S )
 {
-  std::vector<CPoint2D*>::iterator iter;
-  for (iter = (S.m_v_p_Point2D).begin(); iter != (S.m_v_p_Point2D).end(); ++iter)
+  //std::vector<CPoint2D*>::iterator iter;
+  for (auto iter = (S.m_v_p_Point2D).begin(); iter != (S.m_v_p_Point2D).end(); ++iter)
     output << **iter;
   return output;
 }
