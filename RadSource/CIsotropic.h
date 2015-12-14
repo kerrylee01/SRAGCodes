@@ -12,7 +12,8 @@ class CIsotropic : public CSpatial {
   void Clear();
   virtual void Print();
   virtual void Sample(std::mt19937_64 &gen);
-
+  virtual bool Sample(std::vector<double> v_dRandom);
+  
  private:
   double m_dRadius;
   double m_dThetaLimit;

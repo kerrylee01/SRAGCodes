@@ -33,9 +33,6 @@ void CIsotropic::Print()
 
 void CIsotropic::Sample(std::mt19937_64 &gen)
 {
-  //std::random_device rd;
-  //std::mt19937_64 gen(rd());
-  //
   std::uniform_real_distribution<> PosCosTheta_dis(std::cos(m_dThetaLimit), 1);
   std::uniform_real_distribution<> DirCosTheta_dis(-1, 1);
   std::uniform_real_distribution<> Phi_dis(0, 2 * M_PI);
@@ -83,5 +80,47 @@ void CIsotropic::Sample(std::mt19937_64 &gen)
   //direction cosines if this is the case.  Not sure one would ever use
   //this since it would produce all particles going through a point (infinite 
   // dose), but Vic had this option in the original spatial_gen.f routine.
+ 
+}
 
+bool CIsotropic::Sample(std::vector<double> v_dRan)
+{
+  //
+  //This Distribution requires 4 random numbers
+  //
+    if(v_dRan.size() < 4) {
+    std::cout << "In CIsotropic::Sample the provided random number vector does not contain enough elements to proceed." <<std::endl;
+    return false;
+  }
+
+  double dRan[4];
+  dRan[0] = 2 * M_PI * v_dRan[0];
+  dRan[1] = (1 - std::cos(m_dThetaLimit)) * v_dRan[1] + std::cos(m_dThetaLimit);
+  dRan[2] = 2 * M_PI * v_dRan[2];
+  dRan[3] = 2 * v_dRan[3] - 1;
+  //
+  //Create a random point on a sphere
+  double dPhi, dCosTheta, dSinTheta;
+  dPhi = dRan[0];
+  dCosTheta = dRan[1];
+  dSinTheta = sqrt( (1.0 - (dCosTheta * dCosTheta)) );
+  m_p_Position->Set(m_dRadius * cos(dPhi) * dSinTheta,
+	            m_dRadius * sin(dPhi) * dSinTheta,
+	            m_dRadius * dCosTheta              );
+  //
+  //Create random direction cosines
+  dPhi = dRan[2];
+  dCosTheta = dRan[3];
+  dSinTheta = sqrt( (1.0 - (dCosTheta * dCosTheta)) );
+  m_p_Direction->Set(cos(dPhi) * dSinTheta,
+	             sin(dPhi) * dSinTheta,
+	             dCosTheta              );
+  //
+  //Check to see if the desire is for inward directed only
+  //
+  if( m_bDirection ){
+    //if not inward make it so
+    if(*m_p_Position * *m_p_Direction > 0) *m_p_Direction = -(*m_p_Direction);
+  }
+  return true;
 }
