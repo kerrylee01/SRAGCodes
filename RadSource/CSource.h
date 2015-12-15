@@ -24,7 +24,7 @@ class CSource {
   std::vector<double> GetRelativeAbundances() { return m_v_dRelativeAbundances; }  
   void Print();
   void Sample(std::mt19937_64 &gen, CParticleState* p_ParticleState);
-  void SpecSampleExRand(double* d_a_Random);
+  void Sample(std::vector<double> v_dRan, CParticleState* p_ParticleState);
   void SetSpatial(CSpatial* p_Spatial) { m_p_Spatial = p_Spatial; } 
   
  private:

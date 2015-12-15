@@ -2,6 +2,12 @@
 #include <CParticleState.h>
 
 
+CParticleState::CParticleState()
+{
+  m_p_Position = new CPoint3D();
+  m_p_Direction = new CPoint3D();
+}
+
 void CParticleState::Clear() 
 { 
   Delete();

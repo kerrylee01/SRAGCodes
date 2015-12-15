@@ -40,6 +40,8 @@ class CSpectrum {
   //void InterpolateLin();
   void Print();
   void Sample(std::mt19937_64 &gen, CParticleState* p_ParticleState);
+  void Sample(double dRan, CParticleState* p_ParticleState);
+  void DoSampling(double dRan, CParticleState* p_ParticleState);
   void Set();
   void SetAbundance(double dAbundance) { m_dAbundance = dAbundance; }
   void SetSampleLimits(double dLower, double dUpper);
