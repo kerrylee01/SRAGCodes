@@ -94,7 +94,7 @@ TEST_F(RadSourceTest, SphericalElementSampleGen) {
   EXPECT_NEAR(y,-35.752740944487599,1e-12);
   EXPECT_NEAR(z, 31.887198936412876,1e-12);
 
-  for ( int i = 0 ; i < 10000 ; i++ ) {
+  for ( int i = 0 ; i < 100000 ; i++ ) {
     sph->Sample(gen);
     CPoint3D *point = sph->GetPosition();
     double x = point->GetX();
@@ -128,4 +128,63 @@ TEST_F(RadSourceTest, SphericalElementSampleRanArr) {
   EXPECT_NEAR(y,4.3297802811774655e-15,1e-12);
   EXPECT_NEAR(z,35.355339059327378,1e-12);
   // no segfault = pass
+}
+
+// test the SphericalElement sample
+TEST_F(RadSourceTest, ReducedParticleList) {
+  // only use hydrogen/protons
+  int a_iPartList[] = {1};
+  std::vector<int> v_iPartList (a_iPartList, a_iPartList + sizeof(a_iPartList) / sizeof(int));
+  // source dist
+  CSphericalElement *sph = new CSphericalElement(0,0,0,15,15,50,0);
+  // make a new source
+  CSource *source = new CSource(sph);
+  std::string file = src_file;
+  // read the spectra into the source from the file 
+  source->AddBOM2014Spectra(file, v_iPartList);
+  // make the random device
+  std::random_device rd;
+  // seed it
+  std::mt19937_64 gen(12345);
+
+  // get the particle information
+  CParticleState* particleState = new CParticleState();
+  // sample
+  for ( int i = 0 ; i < 100000 ; i++ ) {
+    source->Sample(gen,particleState);
+    EXPECT_EQ(particleState->GetParticleID(),1);
+    EXPECT_GE(particleState->GetEnergy(),0.1);
+    EXPECT_LE(particleState->GetEnergy(),1.e7);
+    EXPECT_EQ(particleState->GetWeight(),1.0);
+    // clear the state
+    particleState->Clear();
+  }
+}
+
+// test the sampling from a single element source
+TEST_F(RadSourceTest, ReducedParticleList2014) {
+  // source dist
+  CSphericalElement *sph = new CSphericalElement(0,0,0,15,15,50,0);
+  // make a new source
+  CSource *source = new CSource(sph);
+  std::string file = src_file;
+  // read the spectra into the source from the file 
+  source->AddSpectrum(new CSpectrum(file+"January2003H.dat",1),1.0);
+  // make the random device
+  std::random_device rd;
+  // seed it
+  std::mt19937_64 gen(12345);
+
+  // get the particle information
+  CParticleState* particleState = new CParticleState();
+  // sample
+  for ( int i = 0 ; i < 100000 ; i++ ) {
+    source->Sample(gen,particleState);
+    EXPECT_EQ(particleState->GetParticleID(),1);
+    EXPECT_GE(particleState->GetEnergy(),1.0);
+    EXPECT_LE(particleState->GetEnergy(),1.e6);
+    EXPECT_EQ(particleState->GetWeight(),1.0);
+    // clear the state
+    particleState->Clear();
+  }
 }
