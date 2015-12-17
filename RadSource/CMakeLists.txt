@@ -18,6 +18,7 @@ LIST(APPEND SRAG_SRC "CPoint2D.cpp")
 LIST(APPEND SRAG_SRC "CParticleState.cpp")
 LIST(APPEND SRAG_SRC "CIsotropic.cpp")
 LIST(APPEND SRAG_SRC "CBeam.cpp")
+LIST(APPEND SRAG_SRC "CSphericalElement.cpp")
 
 # set the headers
 SET ( SRAG_HEADERS "CBeam.h" )
@@ -29,6 +30,7 @@ LIST(APPEND SRAG_HEADERS "CRadEnvironment.h")
 LIST(APPEND SRAG_HEADERS "CSource.h")
 LIST(APPEND SRAG_HEADERS "CSpatial.h")
 LIST(APPEND SRAG_HEADERS "CSpectrum.h")
+LIST(APPEND SRAG_HEADERS "CSphericalElement.hpp")
 
 # use the main as a test for now
 SET( TEST_MAIN "main.cpp")
