@@ -1,3 +1,4 @@
+
 // FluDAG/src/test/test_FlukaFuncs.cpp
 
 #include <gtest/gtest.h>
@@ -187,4 +188,60 @@ TEST_F(RadSourceTest, ReducedParticleList2014) {
     // clear the state
     particleState->Clear();
   }
+}
+
+// test the sampling from a single element source
+TEST_F(RadSourceTest, FlukaParticleFunctionsH) {
+  // source dist
+  CSphericalElement *sph = new CSphericalElement(0,0,0,15,15,50,0);
+  // make a new source
+  CSource *source = new CSource(sph);
+  std::string file = src_file;
+  std::cout << file << std::endl;
+  // read the spectra into the source from the file 
+  source->AddSpectrum(new CSpectrum(file+"January2003H.dat",1),1.0);
+  // make the random device
+  std::random_device rd;
+  // seed it
+  std::mt19937_64 gen(12345);
+
+  // get the particle information
+  CParticleState* particleState = new CParticleState();
+  // sample
+
+  source->Sample(gen,particleState);
+  EXPECT_EQ(particleState->GetParticleID(),1);
+  EXPECT_GE(particleState->GetEnergy(),1.0);
+  EXPECT_LE(particleState->GetEnergy(),1.e6);
+  EXPECT_EQ(particleState->GetWeight(),1.0);
+  EXPECT_EQ(particleState->GetFlukaParticleID(),1);
+  EXPECT_EQ(particleState->GetChargeNumber(),1);
+}
+
+// test the sampling from a single element source
+TEST_F(RadSourceTest, FlukaParticleFunctionsHe) {
+  // source dist
+  CSphericalElement *sph = new CSphericalElement(0,0,0,15,15,50,0);
+  // make a new source
+  CSource *source = new CSource(sph);
+  std::string file = src_file;
+  // read the spectra into the source from the file 
+  std::cout << file << std::endl;
+  source->AddSpectrum(new CSpectrum(file+"January2003He.dat",2),1.0);
+  // make the random device
+  std::random_device rd;
+  // seed it
+  std::mt19937_64 gen(12345);
+
+  // get the particle information
+  CParticleState* particleState = new CParticleState();
+  // sample
+
+  source->Sample(gen,particleState);
+  EXPECT_EQ(particleState->GetParticleID(),2);
+  EXPECT_GE(particleState->GetEnergy(),1.0);
+  EXPECT_LE(particleState->GetEnergy(),1.e6);
+  EXPECT_EQ(particleState->GetWeight(),1.0);
+  EXPECT_EQ(particleState->GetFlukaParticleID(),-2);
+  EXPECT_EQ(particleState->GetChargeNumber(),2);
 }

@@ -45,5 +45,6 @@ ADD_TEST(NAME RadSourceTest.SphericalElementSampleGen COMMAND radsource_test --s
 ADD_TEST(NAME RadSourceTest.SphericalElementSampleRanArr COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/allflux.dat --gtest_filter=RadSourceTest.SphericalElementSampleRanArr)
 ADD_TEST(NAME RadSourceTest.ReducedParticleList COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/allflux.dat --gtest_filter=RadSourceTest.ReducedParticleList)
 ADD_TEST(NAME RadSourceTest.ReducedParticleList2014 COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/January2003/ --gtest_filter=RadSourceTest.ReducedParticleList2014)
+ADD_TEST(NAME RadSourceTest.FlukaParticleFunctionsH COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/January2003/ --gtest_filter=RadSourceTest.FlukaParticleFunctionsH)
+ADD_TEST(NAME RadSourceTest.FlukaParticleFunctionsHe COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/January2003/ --gtest_filter=RadSourceTest.FlukaParticleFunctionsHe)
 
-	

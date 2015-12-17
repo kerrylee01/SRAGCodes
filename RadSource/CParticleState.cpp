@@ -54,3 +54,18 @@ void CParticleState::SetDirection(double dX, double dY, double dZ)
   SetDirection(new CPoint3D(dX, dY, dZ));
 }
 
+int CParticleState::GetFlukaParticleID() {
+  if ( m_iParticleID == 1 ) {
+    return 1;
+  } else if ( m_iParticleID > 1 ) {
+    return -2;
+  }
+}
+
+int CParticleState::GetNucleonNumber() {
+  // what to assume about the nucleon number?
+}
+
+int CParticleState::GetChargeNumber() {
+  return m_iParticleID;
+}
