@@ -1,7 +1,11 @@
 #PROJECT(GCRUnitTests)
- 
-# test source
+
+# radsource test source
 SET (radsource_test_source ${CMAKE_CURRENT_SOURCE_DIR}/test_RadSource.cpp)
+
+# c callable test source
+SET (source_test_source ${CMAKE_CURRENT_SOURCE_DIR}/test_Source.cpp)
+
 
 # set libraries needed to link to test cases
 SET(LIBS
@@ -15,22 +19,24 @@ SET(LIBS
 INCLUDE_DIRECTORIES( ${CMAKE_SOURCE_DIR}/RadSource
                      ${CMAKE_SOURCE_DIR}/gtest/gtest-1.7.0/include/)
 
-# add the test exec
+# add the radsource test exec
 ADD_EXECUTABLE (radsource_test
-        radsource_unit_test_driver.cc
-	${radsource_test_source}
-    )
+                radsource_unit_test_driver.cc
+	              ${radsource_test_source})
 
-# find the path to the source file
-# FIND_PATH(source_file "allflux.dat" ${CMAKE_SOURCE_DIR}/RadSource/GCRSource )
+# add the source test exec
+ADD_EXECUTABLE (source_test
+                radsource_unit_test_driver.cc
+                ${source_test_source})
 
 # libraries needed
 TARGET_LINK_LIBRARIES(radsource_test ${LIBS})
+TARGET_LINK_LIBRARIES(source_test ${LIBS})
 
 # c++ 11 needed
 SET_PROPERTY(TARGET radsource_test PROPERTY CXX_STANDARD 11)
 
-# run the test
+# add the RadSource tests
 ADD_TEST(NAME RadSourceTest.NoFile COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/this_file_doesnt_exist.txt --gtest_filter=RadSourceTest.SetUp)
 ADD_TEST(NAME RadSourceTest.Setup COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/allflux.dat --gtest_filter=RadSourceTest.SetUp)
 # the only test that doesnt need a file
@@ -47,4 +53,6 @@ ADD_TEST(NAME RadSourceTest.ReducedParticleList COMMAND radsource_test --src_fil
 ADD_TEST(NAME RadSourceTest.ReducedParticleList2014 COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/January2003/ --gtest_filter=RadSourceTest.ReducedParticleList2014)
 ADD_TEST(NAME RadSourceTest.FlukaParticleFunctionsH COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/January2003/ --gtest_filter=RadSourceTest.FlukaParticleFunctionsH)
 ADD_TEST(NAME RadSourceTest.FlukaParticleFunctionsHe COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/January2003/ --gtest_filter=RadSourceTest.FlukaParticleFunctionsHe)
-
+# add the c callable function tests
+ADD_TEST(NAME SourceTest.SetUp COMMAND source_test --gtest_filter=SourceTest.SetUp)
+ADD_TEST(NAME SourceTest.Sample COMMAND source_test --gtest_filter=SourceTest.Sample)
