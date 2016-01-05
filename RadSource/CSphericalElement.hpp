@@ -20,27 +20,27 @@ class CSphericalElement : public CSpatial {
   int set_target(double x_width, double y_width);
   // set the sampling radius
   int set_radius(double radius, double z_shift);
-  
+
   // clear the state of the class
   void Clear();
 
   // print the type of sampling
   void Print();
 
-  // sample 
+  // sample
   void Sample(std::mt19937_64 &gen);
   bool Sample(std::vector<double> v_dRan);
 
-  // return a particle 
+  // return a particle
   int sample_particle(double randoms[4],double &x, double &y, double &z,
 		      double &u, double &v, double &w);
- 
+
   // private member variables
   private:
    double x_origin;
    double y_origin;
    double z_origin;
-  
+
    double target_x_width;
    double target_y_width;
    double source_radius;
@@ -48,6 +48,7 @@ class CSphericalElement : public CSpatial {
 };
 #endif
 
+/*
 #ifdef __cplusplus
   extern "C" {
 #endif
@@ -63,3 +64,4 @@ void sample_(double randoms[4], double *x, double *y, double *z,
 #ifdef __cplusplus
   }
 #endif
+*/

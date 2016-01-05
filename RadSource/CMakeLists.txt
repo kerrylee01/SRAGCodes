@@ -19,6 +19,7 @@ LIST(APPEND SRAG_SRC "CParticleState.cpp")
 LIST(APPEND SRAG_SRC "CIsotropic.cpp")
 LIST(APPEND SRAG_SRC "CBeam.cpp")
 LIST(APPEND SRAG_SRC "CSphericalElement.cpp")
+LIST(APPEND SRAG_SRC "Source.cpp")
 
 # set the headers
 SET ( SRAG_HEADERS "CBeam.h" )
@@ -31,6 +32,7 @@ LIST(APPEND SRAG_HEADERS "CSource.h")
 LIST(APPEND SRAG_HEADERS "CSpatial.h")
 LIST(APPEND SRAG_HEADERS "CSpectrum.h")
 LIST(APPEND SRAG_HEADERS "CSphericalElement.hpp")
+LIST(APPEND SRAG_HEADERS "Source.h")
 
 # use the main as a test for now
 SET( TEST_MAIN "main.cpp")
@@ -72,4 +74,3 @@ INSTALL ( TARGETS "test_main"
   LIBRARY DESTINATION "lib"
   ARCHIVE DESTINATION "lib"
   PUBLIC_HEADER DESTINATION "include" )
-

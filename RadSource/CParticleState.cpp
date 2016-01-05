@@ -62,10 +62,13 @@ int CParticleState::GetFlukaParticleID() {
   }
 }
 
+// get the nucleon number
 int CParticleState::GetNucleonNumber() {
-  // what to assume about the nucleon number?
+  // assume that the nucleon number doesnt matter
+  return 0;
 }
 
+// get the charge number
 int CParticleState::GetChargeNumber() {
   return m_iParticleID;
 }

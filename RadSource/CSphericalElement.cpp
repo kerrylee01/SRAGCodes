@@ -4,6 +4,7 @@
 #include "CPoint3D.h"
 #include "CSphericalElement.hpp"
 
+/*
 // sample class pointer
 CSphericalElement *src;
 
@@ -19,8 +20,10 @@ void setup_(double *origin_x, double *origin_y, double *origin_z,
 void sample_(double randoms[4], double *x, double *y, double *z,
 	    double *u, double *v, double *w) {
   int ec = src->sample_particle(randoms,*x,*y,*z,*u,*v,*w);
- 
+
 }
+
+*/
 
 
 CSphericalElement::CSphericalElement(double origin_x, double origin_y, double origin_z,
@@ -114,7 +117,7 @@ int CSphericalElement::sample_particle(double randoms[4], double &x, double &y,
   double phi_angle = 2.*M_PI*randoms[2];
   double cosphi = std::cos(phi_angle);
   double sinphi = std::sin(phi_angle);
- 
+
   // pick a point on the sphere such that the z value is above
   // the origin
   double mintheta = std::acos(z_origin/(source_radius-vertical_shift));
@@ -129,12 +132,12 @@ int CSphericalElement::sample_particle(double randoms[4], double &x, double &y,
   z = source_radius*costheta - vertical_shift;
 
   // trace this ray back to the sphere origin
-  double distance = std::sqrt(std::pow(x-rand_x,2) + std::pow(y-rand_y,2) 
+  double distance = std::sqrt(std::pow(x-rand_x,2) + std::pow(y-rand_y,2)
 			      + std::pow(z-rand_z,2));
 
   u = (rand_x - x)/distance;
   v = (rand_y - y)/distance;
   w = (rand_z - z)/distance;
-  
+
   return 0;
 }
