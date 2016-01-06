@@ -12,9 +12,9 @@ int main(int argc, char* argv[])
 
     if(arg.find("--src_file=") != std::string::npos)
       {
-	std::size_t found = arg.find('=');
-	if (found!=std::string::npos)
-	  src_file = arg.substr(found+1);
+       	std::size_t found = arg.find('=');
+	      if (found!=std::string::npos)
+	        src_file = arg.substr(found+1);
       }
 
 

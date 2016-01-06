@@ -36,6 +36,8 @@ TARGET_LINK_LIBRARIES(source_test ${LIBS})
 # c++ 11 needed
 SET_PROPERTY(TARGET radsource_test PROPERTY CXX_STANDARD 11)
 
+Message(Display ${CMAKE_SOURCE_DIR})
+
 # add the RadSource tests
 ADD_TEST(NAME RadSourceTest.NoFile COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/this_file_doesnt_exist.txt --gtest_filter=RadSourceTest.SetUp)
 ADD_TEST(NAME RadSourceTest.Setup COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/allflux.dat --gtest_filter=RadSourceTest.SetUp)
@@ -54,5 +56,12 @@ ADD_TEST(NAME RadSourceTest.ReducedParticleList2014 COMMAND radsource_test --src
 ADD_TEST(NAME RadSourceTest.FlukaParticleFunctionsH COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/January2003/ --gtest_filter=RadSourceTest.FlukaParticleFunctionsH)
 ADD_TEST(NAME RadSourceTest.FlukaParticleFunctionsHe COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/January2003/ --gtest_filter=RadSourceTest.FlukaParticleFunctionsHe)
 # add the c callable function tests
-ADD_TEST(NAME SourceTest.SetUp COMMAND source_test --gtest_filter=SourceTest.SetUp)
-ADD_TEST(NAME SourceTest.Sample COMMAND source_test --gtest_filter=SourceTest.Sample)
+ADD_TEST(NAME SourceTest.SetUpSource COMMAND source_test --gtest_filter=SourceTest.SetUpSource --src_file=${CMAKE_SOURCE_DIR})
+ADD_TEST(NAME SourceTest.Sample1 COMMAND source_test --gtest_filter=SourceTest.Sample1 --src_file=${CMAKE_SOURCE_DIR})
+ADD_TEST(NAME SourceTest.Sample2 COMMAND source_test --gtest_filter=SourceTest.Sample2 --src_file=${CMAKE_SOURCE_DIR})
+ADD_TEST(NAME BONSourceTest.SetUpSource COMMAND source_test --gtest_filter=BONSourceTest.SetUpSource --src_file=${CMAKE_SOURCE_DIR})
+ADD_TEST(NAME BONSourceTest.Sample1 COMMAND source_test --gtest_filter=BONSourceTest.Sample1 --src_file=${CMAKE_SOURCE_DIR})
+ADD_TEST(NAME BONSourceTest.Sample2 COMMAND source_test --gtest_filter=BONSourceTest.Sample2 --src_file=${CMAKE_SOURCE_DIR})
+ADD_TEST(NAME BON2014SourceTest.SetUpSource COMMAND source_test --gtest_filter=BONSourceTest.SetUpSource --src_file=${CMAKE_SOURCE_DIR})
+ADD_TEST(NAME BON2014SourceTest.Sample1 COMMAND source_test --gtest_filter=BONSourceTest.Sample1 --src_file=${CMAKE_SOURCE_DIR})
+ADD_TEST(NAME BON2014SourceTest.Sample2 COMMAND source_test --gtest_filter=BONSourceTest.Sample2 --src_file=${CMAKE_SOURCE_DIR})

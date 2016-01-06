@@ -24,10 +24,14 @@ std::vector<std::string> Isotopes = {"H","He","Li","Be","B","C","N","O","F",
                                      "Ar","K","Ca","Sc","Ti","V","Cr","Mn",
                                      "Fe","Co","Ni"};
 
+std::vector<int> particle_id = {1,2,3,4,5,6,7,8,9,10,11,12,13,
+                     14,15,16,17,18,19,20,21,22,23,
+                     24,25,26,27,28};
+
 // setup the source
 void setup_source_(double &origin_x, double &origin_y, double &origin_z,
             double &x_width, double &y_width, double &radius,
-            double &z_shift, int &ionid) {
+            double &z_shift, int &ionid, int &spectrum_type) {
 
   int seed = 12345;
   gen.seed(seed);
@@ -43,16 +47,43 @@ void setup_source_(double &origin_x, double &origin_y, double &origin_z,
   // make a new source - attach the SphericalElement Source
   source = new CSource(dist);
 
-  std::string path = "GCRSource/January2003/";
-  path+="January2003";
+  std::string datapath;
+  // get the environemnt for the source path
+  if(const char *gcr_source_path = std::getenv("GCR_SOURCE_PATH")) {
+    datapath = std::string(gcr_source_path);
+  } else {
+    std::cout << "GCR_SOURCE_PATH enviroment variable not set" << std::endl;
+    exit(1);
+  }
+
+  std::string path = datapath;
 
   // add all particles
   if( ionid  <= 0 ) {
-    for( int i = 0; i < (int)(Isotopes.size()); i++ )
-      source->AddSpectrum(new CSpectrum(path+Isotopes[i]+".dat",i+1));
+    for( int i = 0; i < (int)(Isotopes.size()); i++ ) {
+        if(spectrum_type == 0 ) {
+          path += "January2003/";
+          // append the name of the file
+          path += "January2003";
+          source->AddSpectrum(new CSpectrum(path+Isotopes[i]+".dat",i+1));
+        } else if ( spectrum_type == 1 ) {
+          source->AddBOM2014Spectra(path+="allflux.dat", particle_id);
+        } else if ( spectrum_type == 2 ) {
+          source->AddBOM2014Spectra(path+="BON2014flux.dat", particle_id);
+        } else {
+          std::cout << "Invalid source number / ion combination" << std::endl;
+        }
+    }
   } else {
   // add only the requested ion
-      source->AddSpectrum(new CSpectrum(path+Isotopes[ionid-1]+".dat",ionid));
+      if(spectrum_type == 0 ) {
+        path += "January2003/";
+        // append the name of the file
+        path += "January2003";
+        source->AddSpectrum(new CSpectrum(path+Isotopes[ionid-1]+".dat",ionid));
+      } else {
+        std::cout << "Invalid source number / ion combination" << std::endl;
+      }
   }
   return;
 }
