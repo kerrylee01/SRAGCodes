@@ -33,7 +33,8 @@ class SourceTest : public ::testing::Test
     double z_s = 0.0;
     int pid = 0;
     int spectrum_type = 0;
-    setup_source_(x,y,z,x_w,y_w,rad,z_s,pid,spectrum_type);
+    int err = 0;
+    setup_source_(x,y,z,x_w,y_w,rad,z_s,pid,spectrum_type,err);
   }
 };
 
@@ -104,7 +105,8 @@ class BONSourceTest : public ::testing::Test
     double z_s = 0.0;
     int pid = 0;
     int spectrum_type = 1;
-    setup_source_(x,y,z,x_w,y_w,rad,z_s,pid,spectrum_type);
+    int err = 0;
+    setup_source_(x,y,z,x_w,y_w,rad,z_s,pid,spectrum_type,err);
   }
 };
 
@@ -176,7 +178,8 @@ class BON2014SourceTest : public ::testing::Test
     double z_s = 0.0;
     int pid = 0;
     int spectrum_type = 2;
-    setup_source_(x,y,z,x_w,y_w,rad,z_s,pid,spectrum_type);
+    int err = 0;
+    setup_source_(x,y,z,x_w,y_w,rad,z_s,pid,spectrum_type,err);
   }
 };
 

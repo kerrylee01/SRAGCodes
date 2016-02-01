@@ -45,9 +45,9 @@
       LOGICAL LFIRST
 *
 **********************************************************************
-*     Added By Kerry Lee 6/27/2014 from generic source.f started by 
+*     Added By Kerry Lee 6/27/2014 from generic source.f started by
 *     Toni Empl in Jan 2003 and modified by Kerry Lee in Jan 2006
-*      
+*
       LOGICAL LMANY, LTOTAL
 
 **********************************************************************
@@ -74,15 +74,34 @@
 *  |  *** User initialization ***
 *************************************************************************
 *     Added by Kerry Lee 6/27/2014
-         LMANY = ABS( WHASOU( 6 ) ) .GE. 2
-         LTOTAL = WHASOU( 6 ) .LE. -1
-         CALL OAUXFI ( SDUSOU, 93, 'FORMATTED', IERR )
-         IF ( IERR .GT. 0 ) THEN
-            IERR = 0
-            CALL OAUXFI ( 'source.inp', 93, 'old', IERR )
-         END IF
-         IF ( IERR .GT. 0 ) CALL FLABRT ( 'source' , 
-     +                                    'source.inp missing' )
+         WRITE(*,*) '------------------------------------------'
+         WRITE(*,*) 'WHASOU(1) = X ORIGIN (cm)'
+         WRITE(*,*) 'WHASOU(2) = Y ORIGIN (cm)'
+         WRITE(*,*) 'WHASOU(3) = Z ORIGIN (cm)'
+         WRITE(*,*) 'WHASOU(4) = X WIDTH (cm)'
+         WRITE(*,*) 'WHASOU(5) = Y WIDTH (cm)'
+         WRITE(*,*) 'WHASOU(6) = RADIUS of sample sphere (cm)'
+         WRITE(*,*) 'WHASOU(7) = Z Shift (cm)'
+         WRITE(*,*) 'WHASOU(8) = Particle ID (int) <= 0 all particles in file'
+         WRITE(*,*) '                               = 1 (hydrogen)'
+         WRITE(*,*) '                               = 2 (helium)'
+         WRITE(*,*) '                               = ... etc '
+         WRITE(*,*) 'WHASOU(9) = Source Type (int) <= 0 January Files'
+         WRITE(*,*) '                               = 1 BOM allflux.dat'
+         WRITE(*,*) '                               = 2 BOM2014 allflux.dat'
+         WRITE(*,*) '------------------------------------------'
+c the ionid the user would like
+         IONID = INT(WHASOU(8))
+c the spectral type the user wants
+         ISPECTY = INT(WHASOU(9))
+         CALL SETUP_SOURCE(
+     *         WHASOU(1),WHASOU(2),WHASOU(3),
+     *         WHASOU(4),WHASOU(5),WHASOU(6),
+     *         WHASOU(7),IONID,ISPECTY,IERR)
+     *         )
+*    Check the error status to make sure that everything is ok to continue
+         IF ( IERR .GT. 0 ) CALL FLABRT ( 'source' ,
+     +                                    'error from source setup' )
 *************************************************************************
       END IF
 
@@ -97,8 +116,8 @@
 **********************************************************************
 *     Added by Kerry Lee 6/27/2014
 *
-      READ( 93, *, ERR = 99, END = 99 ) IDPART, EP_, X_, Y_, Z_, CX_, 
-     &                                  CY_, CZ_, WT_
+      CALL SAMPLE_SOURCE(RANDOMS,0,X_,Y_,Z_
+    *                    CX_,CY_,CZ_,E_,WT_,II,ZZ,AA)
 **********************************************************************
 
 *  Wt is the weight of the particle
@@ -111,29 +130,29 @@
 
       WEIPRI = WEIPRI + WTFLK (NPFLKA)
 
-**********************************************************************
-*     Added by Kerry Lee 6/27/2014
-*
-      WRITE( 35, * )'check source input', IDPART, X_, Y_, Z_
-     +    , CX_, CY_, CZ_, EP_, WT_, WEIPRI
-      
 cc      Added some things to 2005.6 version since -201,-301,-302,-402 are not
 cc      treated as heavy ions.  May have been true with the previous version
 cc      also but I never found it to be a problem. 1/3/2006 KL.
-        
-cc      Set IJBEAM to appropriate FLUKA particle ID number based on IDpart 
+
+      IDPART = II
+      IPROA = AA
+      IPROZ = ZZ
+
+cc      Need to make sure we return tritium and deuterium
+
+cc      Set IJBEAM to appropriate FLUKA particle ID number based on IDpart
         IF (IDPART .GE. -6 ) THEN
            IJBEAM = IDPART
         ELSE IF ( IDPART .LE. -101 .and. IDPART .GE. -402) THEN
-           IF ( IDPART .EQ. -101 ) THEN 
+           IF ( IDPART .EQ. -101 ) THEN
               IJBEAM = 1
-           ELSE IF (IDpart.EQ. -201 ) THEN 
+           ELSE IF (IDpart.EQ. -201 ) THEN
               IJBEAM = -3
-           ELSE IF (IDpart.EQ. -301 ) THEN 
+           ELSE IF (IDpart.EQ. -301 ) THEN
               IJBEAM = -4
-           ELSE IF (IDpart.EQ. -302 ) THEN 
+           ELSE IF (IDpart.EQ. -302 ) THEN
               IJBEAM = -5
-           ELSE IF (IDpart.EQ. -402 ) THEN 
+           ELSE IF (IDpart.EQ. -402 ) THEN
               IJBEAM = -6
            ENDIF
         ELSE IF (IDPART .LT. -402 ) THEN
@@ -186,27 +205,18 @@ cc      ------------ Decode Heavy ion particle Id for 100*A+Z FLUKA number
       END IF
 
 ************************************************************************
-*     Added by Kerry Lee 6/27/2014
-*
-*     If the input is Total energy/momentum then adjust it per nucleon.
-*     NOTE: May not need to use AMUC12 since AM ( IJBEAM ) has been
-*           replaced with AM ( IONID).  This needs to be checked
-      IF (LTOTAL) THEN
-         WRITE ( LUNOUT, * ) ' ---> source (EP)/n:',
-     +                       EP_ * AMUC12 / AM ( IONID )
-      ELSE
-         EP_ = EP_ * AM ( IONID ) / AMUC12
-      ENDIF
-      
+c     Energy from file is GeV/nucleon, multiply by the nucleon number
+      EP_ = EP_ * AM ( IONID ) / AMC12
+
 c     Check to see if ep_ input is energy or momentum and set Plab_ and
 cc    Ekin_ accordingly.
 *     NOTE: Not sure here if replacing AM (IJBEAM) with AM(IONID) changes
 *           the results here, but needs to be checked.
       PLAB_ =  EP_
-      IF ( EP_ .LT. 0 ) 
+      IF ( EP_ .LT. 0 )
      & PLAB_ = SQRT ( -EP_* ( -EP_ + TWOTWO * AM ( IONID )))
       EKIN_ = SQRT ( PLAB_**2 + AM ( IONID )**2 ) - AM ( IONID )
-      WRITE( 35, * ) EKIN_
+
 ************************************************************************
 *  |
 *  +-------------------------------------------------------------------*
@@ -268,7 +278,7 @@ cc      PMOFLK (NPFLKA) = PBEAM
       TXFLK  (NPFLKA) = CX_
       TYFLK  (NPFLKA) = CY_
       TZFLK  (NPFLKA) = CZ_
-      TZFLK  (NPFLKA) = SQRT ( ONEONE - TXFLK (NPFLKA)**2 
+      TZFLK  (NPFLKA) = SQRT ( ONEONE - TXFLK (NPFLKA)**2
      &                       - TYFLK (NPFLKA)**2 )
 ************************************************************************
 *  Polarization cosines:
@@ -300,7 +310,7 @@ cc      PMOFLK (NPFLKA) = PBEAM
 *     &    TZFLK  (NPFLKA)
 *     Normalization option - 12/3/12
 *      TZFLK  (NPFLKA) = SQRT ( ONEONE - TXFLK (NPFLKA)**2
-*     &                       - TYFLK (NPFLKA)**2 ) 
+*     &                       - TYFLK (NPFLKA)**2 )
 *  Calculate the total kinetic energy of the primaries: don't change
       IF ( ILOFLK (NPFLKA) .EQ. -2 .OR. ILOFLK (NPFLKA) .GT. 100000 )
      &   THEN
@@ -336,4 +346,3 @@ cc   ----------- no more input, tell FLUKA to quit
 
 *=== End of subroutine Source =========================================*
       END
-

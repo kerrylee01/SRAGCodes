@@ -31,11 +31,10 @@ std::vector<int> particle_id = {1,2,3,4,5,6,7,8,9,10,11,12,13,
 // setup the source
 void setup_source_(double &origin_x, double &origin_y, double &origin_z,
             double &x_width, double &y_width, double &radius,
-            double &z_shift, int &ionid, int &spectrum_type) {
+            double &z_shift, int &ionid, int &spectrum_type, int &error) {
 
   int seed = 12345;
   gen.seed(seed);
-
 
   // make new spherical element class
   dist = new CSphericalElement(origin_x, origin_y, origin_z,
