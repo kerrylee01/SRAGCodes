@@ -1,6 +1,8 @@
 # CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 MESSAGE ( STATUS "Including Amalgamated PyNE")
 
+ADD_SUBDIRECTORY(test)
+
 SET ( CODE_SRCDIR      "pyne" )
 SET ( CODE_SRC_FILES   "pyne.cpp"  )
 SET ( CODE_PUB_HEADERS "pyne.h" )
