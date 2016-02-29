@@ -34,8 +34,6 @@ LIST(APPEND SRAG_HEADERS "CSpectrum.h")
 LIST(APPEND SRAG_HEADERS "CSphericalElement.hpp")
 LIST(APPEND SRAG_HEADERS "Source.h")
 
-# use the main as a test for now
-SET( TEST_MAIN "main.cpp")
 
 # set the includes
 INCLUDE_DIRECTORIES( ${INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR})
@@ -43,12 +41,9 @@ INCLUDE_DIRECTORIES( ${INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR})
 # Create Source Library
 ADD_LIBRARY( gcrsource SHARED ${SRAG_SRC} )
 
-# add executable
-ADD_EXECUTABLE("test_main" ${TEST_MAIN})
-TARGET_LINK_LIBRARIES("test_main" gcrsource)
-
 # set the headers to install
 SET_TARGET_PROPERTIES( gcrsource PROPERTIES PUBLIC_HEADER "${SRAG_HEADERS}" )
+
 
 # c++11 support
 add_definitions(-std=c++11)
@@ -68,9 +63,3 @@ INSTALL ( TARGETS gcrsource
 # add the tests
 add_subdirectory(test)
 
-# Put the test in bin
-INSTALL ( TARGETS "test_main"
-  RUNTIME DESTINATION ${INSTALL_BIN_DIR}
-  LIBRARY DESTINATION ${INSTALL_LIB_DIR}
-  ARCHIVE DESTINATION ${INSTALL_ARCH_DIR}
-  PUBLIC_HEADER DESTINATION ${INSTALL_HEADER_DIR} )

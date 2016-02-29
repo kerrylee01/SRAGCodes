@@ -1,7 +1,6 @@
 #include <iostream>
 #include <CParticleState.h>
 
-
 CParticleState::CParticleState()
 {
   m_p_Position = new CPoint3D();
@@ -64,7 +63,6 @@ int CParticleState::GetFlukaParticleID() {
 
 // get the nucleon number
 int CParticleState::GetNucleonNumber() {
-  // assume that the nucleon number doesnt matter
   return 0;
 }
 

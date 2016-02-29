@@ -22,7 +22,7 @@ INCLUDE_DIRECTORIES( ${CMAKE_SOURCE_DIR}/RadSource
 # add the radsource test exec
 ADD_EXECUTABLE (radsource_test
                 radsource_unit_test_driver.cc
-	              ${radsource_test_source})
+	        ${radsource_test_source})
 
 # add the source test exec
 ADD_EXECUTABLE (source_test

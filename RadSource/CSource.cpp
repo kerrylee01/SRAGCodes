@@ -67,7 +67,11 @@ void CSource::AddBOM2014Spectra(std::string sSpecFile, std::vector<int> v_iPartL
   std::stringstream ssStream;
   int iIndex;
   double dEnergy, dFlux, dSumFlux = 0.0;
+
+    std::cout << "FILE= " << sSpecFile << std::endl;
+
   if( !(ifSpecFile.good()) ) { 
+    std::cout << "FILE= " << sSpecFile << std::endl;
     //std::cout<<"Error opening file "<<ifSpecFile<<std::endl;
     std::cout<<"Error opening file "<<sSpecFile<<std::endl;
     return;
@@ -118,6 +122,7 @@ void CSource::AddBOM2014Spectra(std::string sSpecFile, std::vector<int> v_iPartL
   for(unsigned int i = 0 ; i < v_dFlux.size(); i++)
     if (v_iPartList.size() == 0 || (std::find(v_iPartList.begin(), v_iPartList.end(), v_iParticleID[i]) != v_iPartList.end()) )
       AddSpectrum(new CSpectrum(v_dEnergy, v_dFlux[i], v_iParticleID[i]), dAbundance);
+  std::cout << "all done" << std::endl;
 }
 
 void CSource::Clear() 
