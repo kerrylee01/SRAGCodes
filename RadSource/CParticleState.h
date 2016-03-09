@@ -22,6 +22,10 @@ class CParticleState {
   double GetEnergy() { return m_dEnergy; }
   double GetWeight() { return m_dWeight; }
   int GetParticleID() { return m_iParticleID; }
+  int GetFlukaParticleID();
+  int GetNucleonNumber();
+  int GetChargeNumber();
+
   void Print();
 
  private:

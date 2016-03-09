@@ -46,7 +46,7 @@ void CRadEnvironment::Sample(std::vector<double> v_dRan, CParticleState* p_Parti
   
   std::vector<double>::iterator iter_low;
   double dRandom = m_v_dRelativeAbundances.back() * v_dRan[0];
-  iter_low = std::lower_bound(m_v_dRelativeAbundances.begin(), m_v_dRelativeAbundances.end(), );
+  iter_low = std::lower_bound(m_v_dRelativeAbundances.begin(), m_v_dRelativeAbundances.end(), dRandom );
   std::vector<double> v_dRandom(v_dRan.begin() + 1, v_dRan.end());
   m_v_p_Sources[iter_low - m_v_dRelativeAbundances.begin() - 1]->Sample(v_dRandom, p_ParticleState);
 

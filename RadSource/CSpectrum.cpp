@@ -21,6 +21,7 @@ CSpectrum::CSpectrum(std::string sSpecFile, int iParticleID)
 {
   m_dAbundance = 0.0;
   m_iParticleID = iParticleID;
+  std::cout << sSpecFile.c_str() << std::endl;
   std::ifstream *ifSpecFile = new std::ifstream(sSpecFile.c_str());
   double dEnergy, dFlux, dSumFlux = 0.0;
   if( !(ifSpecFile->good()) ) { 

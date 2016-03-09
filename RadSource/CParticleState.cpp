@@ -1,7 +1,6 @@
 #include <iostream>
 #include <CParticleState.h>
 
-
 CParticleState::CParticleState()
 {
   m_p_Position = new CPoint3D();
@@ -54,3 +53,20 @@ void CParticleState::SetDirection(double dX, double dY, double dZ)
   SetDirection(new CPoint3D(dX, dY, dZ));
 }
 
+int CParticleState::GetFlukaParticleID() {
+  if ( m_iParticleID == 1 ) {
+    return 1;
+  } else if ( m_iParticleID > 1 ) {
+    return -2;
+  }
+}
+
+// get the nucleon number
+int CParticleState::GetNucleonNumber() {
+  return 0;
+}
+
+// get the charge number
+int CParticleState::GetChargeNumber() {
+  return m_iParticleID;
+}
