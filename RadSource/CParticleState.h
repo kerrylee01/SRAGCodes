@@ -2,6 +2,8 @@
 #ifndef Header_CParticleState
 #define Header_CParticleState
 
+#include <pyne.h>
+
 #include <CPoint3D.h>
 
 class CParticleState {
