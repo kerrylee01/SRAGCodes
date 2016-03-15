@@ -214,6 +214,8 @@ TEST_F(RadSourceTest, FlukaParticleFunctionsH) {
   EXPECT_EQ(particleState->GetWeight(),1.0);
   EXPECT_EQ(particleState->GetFlukaParticleID(),1);
   EXPECT_EQ(particleState->GetChargeNumber(),1);
+  EXPECT_EQ(particleState->GetNucleonNumber(),1);
+  EXPECT_EQ(particleState->GetAtomicMass(),1.00782503223);
 }
 
 // test the sampling from a single element source
@@ -242,4 +244,6 @@ TEST_F(RadSourceTest, FlukaParticleFunctionsHe) {
   EXPECT_EQ(particleState->GetWeight(),1.0);
   EXPECT_EQ(particleState->GetFlukaParticleID(),-2);
   EXPECT_EQ(particleState->GetChargeNumber(),2);
+  EXPECT_EQ(particleState->GetNucleonNumber(),4);
+  EXPECT_DOUBLE_EQ(particleState->GetAtomicMass(),4.00260325413);
 }

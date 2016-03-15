@@ -51,7 +51,7 @@ void CParticleState::SetParticleID(int iParticleID,double random) {
   comp[m_iParticleID*10000000] = 1.0;
 
   pyne::Material mat = pyne::Material(comp);
-  mat.expand_elements();
+  mat = mat.expand_elements();
 
   nucid = mat.sampler(random,"atom");
   charge = pyne::nucname::znum(nucid);
@@ -65,6 +65,7 @@ void CParticleState::SetDirection(CPoint3D* p_Point3D)
   m_p_Direction = p_Point3D;
   m_p_Direction->Normalize();
 }
+
 
 void CParticleState::SetDirection(double dX, double dY, double dZ)
 {
