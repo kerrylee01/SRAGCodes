@@ -50,12 +50,13 @@ TEST_F(SourceTest, Sample1) {
   double u,v,w;
   double e,wgt;
   int id,zz,aa;
+  double am;
 
   // randoms
   //std::vector<double> randoms={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4};
   double randoms[10] = {0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4,0.4,0.4};
   int num_randoms = 10;
-  sample_source_(randoms,num_randoms,x,y,z,u,v,w,e,wgt,id,zz,aa);
+  sample_source_(randoms,num_randoms,x,y,z,u,v,w,e,wgt,am,id,zz,aa);
 }
 
 //---------------------------------------------------------------------------//
@@ -65,13 +66,14 @@ TEST_F(SourceTest, Sample2) {
   double u,v,w;
   double e,wgt;
   int id,zz,aa;
+  double am;
 
   // randoms
   //std::vector<double> randoms={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4};
   double randoms[10] = {0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4,0.4,0.4};
   int num_randoms = 10;
   for ( int i = 0 ; i < 10 ; i++ ) {
-   sample_source_(randoms,num_randoms,x,y,z,u,v,w,e,wgt,id,zz,aa);
+   sample_source_(randoms,num_randoms,x,y,z,u,v,w,e,wgt,am,id,zz,aa);
    std::cout << x << " " << y << " " << z << std::endl;
    std::cout << u << " " << v << " " << w << std::endl;
    std::cout << e << " " << wgt << std::endl;
@@ -122,12 +124,13 @@ TEST_F(BONSourceTest, Sample1) {
   double u,v,w;
   double e,wgt;
   int id,zz,aa;
+  double am;
 
   // randoms
   //std::vector<double> randoms={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4};
   double randoms[10] = {0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4,0.4,0.4};
   int num_randoms = 10;
-  sample_source_(randoms,num_randoms,x,y,z,u,v,w,e,wgt,id,zz,aa);
+  sample_source_(randoms,num_randoms,x,y,z,u,v,w,e,wgt,am,id,zz,aa);
 }
 
 //---------------------------------------------------------------------------//
@@ -137,13 +140,14 @@ TEST_F(BONSourceTest, Sample2) {
   double u,v,w;
   double e,wgt;
   int id,zz,aa;
+  double am;
 
   // randoms
   //std::vector<double> randoms={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4};
   double randoms[10] = {0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4,0.4,0.4};
   int num_randoms = 10;
   for ( int i = 0 ; i < 10 ; i++ ) {
-   sample_source_(randoms,num_randoms,x,y,z,u,v,w,e,wgt,id,zz,aa);
+   sample_source_(randoms,num_randoms,x,y,z,u,v,w,e,wgt,am,id,zz,aa);
    std::cout << x << " " << y << " " << z << std::endl;
    std::cout << u << " " << v << " " << w << std::endl;
    std::cout << e << " " << wgt << std::endl;
@@ -195,12 +199,13 @@ TEST_F(BON2014SourceTest, Sample1) {
   double u,v,w;
   double e,wgt;
   int id,zz,aa;
+  double am;
 
   // randoms
   //std::vector<double> randoms={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4};
   double randoms[10] = {0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4,0.4,0.4};
   int num_randoms = 10;
-  sample_source_(randoms,num_randoms,x,y,z,u,v,w,e,wgt,id,zz,aa);
+  sample_source_(randoms,num_randoms,x,y,z,u,v,w,e,wgt,am,id,zz,aa);
 }
 
 //---------------------------------------------------------------------------//
@@ -210,13 +215,14 @@ TEST_F(BON2014SourceTest, Sample2) {
   double u,v,w;
   double e,wgt;
   int id,zz,aa;
+  double am;
 
   // randoms
   //std::vector<double> randoms={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4};
   double randoms[10] = {0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4,0.4,0.4};
   int num_randoms = 10;
   for ( int i = 0 ; i < 10 ; i++ ) {
-   sample_source_(randoms,num_randoms,x,y,z,u,v,w,e,wgt,id,zz,aa);
+   sample_source_(randoms,num_randoms,x,y,z,u,v,w,e,wgt,am,id,zz,aa);
    std::cout << x << " " << y << " " << z << std::endl;
    std::cout << u << " " << v << " " << w << std::endl;
    std::cout << e << " " << wgt << std::endl;

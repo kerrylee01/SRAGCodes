@@ -60,6 +60,7 @@ void CSource::AddBOM2014Spectra(std::string sSpecFile, std::vector<int> v_iPartL
   //
   std::vector<double> v_dTemp;
   std::vector<double> v_dEnergy;
+
   std::vector<std::vector<double> > v_dFlux;
   std::vector<int> v_iParticleID;
   std::ifstream ifSpecFile(sSpecFile.c_str());
@@ -120,8 +121,10 @@ void CSource::AddBOM2014Spectra(std::string sSpecFile, std::vector<int> v_iPartL
     AddSpectrum(new CSpectrum(v_dEnergy, *iter, v_iParticleID[i]), dAbundance);
   */
   for(unsigned int i = 0 ; i < v_dFlux.size(); i++)
-    if (v_iPartList.size() == 0 || (std::find(v_iPartList.begin(), v_iPartList.end(), v_iParticleID[i]) != v_iPartList.end()) )
+    if (v_iPartList.size() == 0 || (std::find(v_iPartList.begin(), v_iPartList.end(), v_iParticleID[i]) != v_iPartList.end()) ){ 
+      std::cout << i << std::endl;
       AddSpectrum(new CSpectrum(v_dEnergy, v_dFlux[i], v_iParticleID[i]), dAbundance);
+    }
   std::cout << "all done" << std::endl;
 }
 
@@ -144,6 +147,15 @@ void CSource::Delete()
 
 void CSource::Sample(std::mt19937_64 &gen, CParticleState* p_ParticleState)
 {
+  std::uniform_real_distribution<> real_dis(0,1);
+  std::vector<double> randoms;
+  for ( int i = 0 ; i < 10 ; i++ ) {
+    randoms.push_back(real_dis(gen));
+  }
+  real_dis(gen);
+
+  Sample(randoms,p_ParticleState);
+  /*
   //std::cout<<"In CSource::Sample(gen, CParticleState)"<<std::endl;
   std::vector<double>::iterator iter_low;
   std::uniform_real_distribution<> real_dis(0, m_v_dRelativeAbundances.back());
@@ -163,6 +175,7 @@ void CSource::Sample(std::mt19937_64 &gen, CParticleState* p_ParticleState)
     p_ParticleState->SetPosition(m_p_Spatial->GetPosition());
     p_ParticleState->SetDirection(m_p_Spatial->GetDirection());
   }
+  */
   //std::cout<<p_ParticleState->GetParticleID()<<"  "<<p_ParticleState->GetEnergy()<<" "<<p_ParticleState->GetWeight()<<std::endl;
 }
 
@@ -177,11 +190,11 @@ void CSource::Sample(std::vector<double> v_dRan, CParticleState* p_ParticleState
   double dRandom = m_v_dRelativeAbundances.back() * v_dRan[0];
   iter_low = std::lower_bound(m_v_dRelativeAbundances.begin(), m_v_dRelativeAbundances.end(), dRandom );
 
-  m_v_p_Spectra[iter_low - m_v_dRelativeAbundances.begin() - 1]->Sample(v_dRan[1], p_ParticleState);
+  m_v_p_Spectra[iter_low - m_v_dRelativeAbundances.begin() - 1]->Sample(v_dRan[1], v_dRan[2], p_ParticleState);
   //
   //Now take care of spatial distribution:
   //
-  std::vector<double> v_dRandom(v_dRan.begin() + 2, v_dRan.end());
+  std::vector<double> v_dRandom(v_dRan.begin() + 3, v_dRan.end());
   if(m_p_Spatial != 0x0) {
     if(m_p_Spatial->Sample(v_dRandom) == false) return;
     p_ParticleState->SetPosition(m_p_Spatial->GetPosition());

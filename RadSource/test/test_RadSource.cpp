@@ -58,6 +58,7 @@ TEST_F(RadSourceTest, Sample) {
   CIsotropic* p_Isotropic = new CIsotropic(1.0, false);
   CSource *source = new CSource(p_Isotropic);
   std::string file = src_file;
+  std::cout << file << std::endl;
   source->AddBOM2014Spectra(file, v_iPartList);
   source->Sample(gen,particleState);
 }

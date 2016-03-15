@@ -42,6 +42,24 @@ void CParticleState::SetPosition(double dX, double dY, double dZ)
   SetPosition(new CPoint3D(dX, dY, dZ));
 }
 
+// set the particle id
+void CParticleState::SetParticleID(int iParticleID,double random) {
+  // set the particle id - equivalent to the charge number
+  m_iParticleID = iParticleID;
+
+  pyne::comp_map comp;
+  comp[m_iParticleID*10000000] = 1.0;
+
+  pyne::Material mat = pyne::Material(comp);
+  mat.expand_elements();
+
+  nucid = mat.sampler(random,"atom");
+  charge = pyne::nucname::znum(nucid);
+  nucleon_number = pyne::nucname::anum(nucid);
+  atomic_mass = pyne::atomic_mass(nucid);
+}
+
+
 void CParticleState::SetDirection(CPoint3D* p_Point3D)
 {
   m_p_Direction = p_Point3D;
@@ -61,12 +79,3 @@ int CParticleState::GetFlukaParticleID() {
   }
 }
 
-// get the nucleon number
-int CParticleState::GetNucleonNumber() {
-  return 0;
-}
-
-// get the charge number
-int CParticleState::GetChargeNumber() {
-  return m_iParticleID;
-}

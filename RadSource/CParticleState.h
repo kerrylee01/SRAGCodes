@@ -18,15 +18,17 @@ class CParticleState {
   void SetDirection(double, double, double);
   void SetEnergy(double dEnergy) { m_dEnergy = dEnergy; }
   void SetWeight(double dWeight) { m_dWeight = dWeight; }
-  void SetParticleID(int iParticleID) { m_iParticleID = iParticleID; }
+  void SetParticleID(int iParticleID, double random);
   CPoint3D* GetPosition() { return m_p_Position; }
   CPoint3D* GetDirection() { return m_p_Direction; }
   double GetEnergy() { return m_dEnergy; }
   double GetWeight() { return m_dWeight; }
   int GetParticleID() { return m_iParticleID; }
   int GetFlukaParticleID();
-  int GetNucleonNumber();
-  int GetChargeNumber();
+  int GetNucleonNumber() {return nucleon_number;}
+  int GetChargeNumber(){return charge;}
+  int GetAtomicMass(){return atomic_mass;}
+
 
   void Print();
 
@@ -36,6 +38,10 @@ class CParticleState {
   double m_dEnergy;
   double m_dWeight;
   int m_iParticleID;
+  int nucid;
+  int charge;
+  int nucleon_number;
+  double atomic_mass;
  
 };
 

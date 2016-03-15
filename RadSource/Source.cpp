@@ -95,7 +95,7 @@ void setup_source_(double &origin_x, double &origin_y, double &origin_z,
 // sample from the source
 void sample_source_(double *randoms, int& num_randoms, double &xxx, double &yyy, double &zzz,
              double &uuu, double &vvv, double &www,
-             double &energy, double &weight,
+             double &energy, double &weight, double &atomic_mass,
              int &ionID, int &charge, int &nucleon_num) {
 
   // randoms
@@ -120,9 +120,14 @@ void sample_source_(double *randoms, int& num_randoms, double &xxx, double &yyy,
   // set the energy and weight
   energy = state->GetEnergy();
   weight = state->GetWeight();
+
   // set the ion ids
   ionID = state->GetFlukaParticleID();
+  
+  //  sample the particle data
   charge = state->GetChargeNumber();
-  nucleon_num = AtomicMass[charge-1];
+  nucleon_num = state->GetNucleonNumber();
+  atomic_mass = state->GetAtomicMass();
+
   return;
 }
