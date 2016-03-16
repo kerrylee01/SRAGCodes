@@ -55,6 +55,7 @@ ADD_TEST(NAME RadSourceTest.ReducedParticleList COMMAND radsource_test --src_fil
 ADD_TEST(NAME RadSourceTest.ReducedParticleList2014 COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/January2003/ --gtest_filter=RadSourceTest.ReducedParticleList2014)
 ADD_TEST(NAME RadSourceTest.FlukaParticleFunctionsH COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/January2003/ --gtest_filter=RadSourceTest.FlukaParticleFunctionsH)
 ADD_TEST(NAME RadSourceTest.FlukaParticleFunctionsHe COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/January2003/ --gtest_filter=RadSourceTest.FlukaParticleFunctionsHe)
+ADD_TEST(NAME RadSourceTest.FlukaParticleFunctionsFe COMMAND radsource_test --src_file=${CMAKE_SOURCE_DIR}/RadSource/GCRSource/January2003/ --gtest_filter=RadSourceTest.FlukaParticleFunctionsFe)
 # add the c callable function tests
 ADD_TEST(NAME SourceTest.SetUpSource COMMAND source_test --gtest_filter=SourceTest.SetUpSource --src_file=${CMAKE_SOURCE_DIR})
 ADD_TEST(NAME SourceTest.Sample1 COMMAND source_test --gtest_filter=SourceTest.Sample1 --src_file=${CMAKE_SOURCE_DIR})

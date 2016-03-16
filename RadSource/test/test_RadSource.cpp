@@ -247,3 +247,57 @@ TEST_F(RadSourceTest, FlukaParticleFunctionsHe) {
   EXPECT_EQ(particleState->GetNucleonNumber(),4);
   EXPECT_DOUBLE_EQ(particleState->GetAtomicMass(),4.00260325413);
 }
+
+// test the sampling from a single element source
+TEST_F(RadSourceTest, FlukaParticleFunctionsFe) {
+  // source dist
+  CSphericalElement *sph = new CSphericalElement(0,0,0,15,15,50,0);
+  // make a new source
+  CSource *source = new CSource(sph);
+  std::string file = src_file;
+  // read the spectra into the source from the file 
+  std::cout << file << std::endl;
+  source->AddSpectrum(new CSpectrum(file+"January2003Fe.dat",26),1.0);
+  // make the random device
+  std::random_device rd;
+  // seed it
+  std::mt19937_64 gen(12345);
+
+  // get the particle information
+  CParticleState* particleState = new CParticleState();
+  // sample
+
+  source->Sample(gen,particleState);
+  EXPECT_EQ(particleState->GetParticleID(),26);
+  EXPECT_GE(particleState->GetEnergy(),1.0);
+  EXPECT_LE(particleState->GetEnergy(),1.e6);
+  EXPECT_EQ(particleState->GetWeight(),1.0);
+  EXPECT_EQ(particleState->GetFlukaParticleID(),-2);
+  EXPECT_EQ(particleState->GetChargeNumber(),26);
+  EXPECT_EQ(particleState->GetNucleonNumber(),56);
+  EXPECT_DOUBLE_EQ(particleState->GetAtomicMass(),55.934936325999999);
+  EXPECT_EQ(particleState->GetNucID(),260560000);
+
+  std::map<int,int> counts;
+  for ( int i = 0 ; i < 1000000 ; i++ ) {
+    source->Sample(gen,particleState);
+    if ( counts.count(particleState->GetNucID()) == 0 ) {
+      counts[particleState->GetNucID()] = 1;
+    } else {
+      counts[particleState->GetNucID()] += 1;
+    }
+  }
+
+  std::map<int,double> ref_results;
+
+  ref_results[260540000] = 0.05845;
+  ref_results[260560000] = 0.91754;
+  ref_results[260570000] = 0.02119;
+  ref_results[260580000] = 0.00282;
+    
+  std::map<int,int> :: iterator it;
+  int sum = 0;
+  for ( it = counts.begin() ; it != counts.end() ; ++it ) {
+    EXPECT_NEAR(double(it->second)/double(1000000),ref_results[it->first],0.01);
+  }
+}

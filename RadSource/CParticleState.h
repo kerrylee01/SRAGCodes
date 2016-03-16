@@ -27,9 +27,9 @@ class CParticleState {
   int GetFlukaParticleID();
   int GetNucleonNumber() {return nucleon_number;}
   int GetChargeNumber(){return charge;}
+  int GetNucID(){return nucid;}
   double GetAtomicMass(){return atomic_mass;}
-
-
+ 
   void Print();
 
  private:

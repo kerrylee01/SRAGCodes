@@ -43,7 +43,7 @@ void CParticleState::SetPosition(double dX, double dY, double dZ)
 }
 
 // set the particle id
-void CParticleState::SetParticleID(int iParticleID,double random) {
+void CParticleState::SetParticleID(int iParticleID, double random) {
   // set the particle id - equivalent to the charge number
   m_iParticleID = iParticleID;
 
