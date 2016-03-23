@@ -242,7 +242,7 @@ TEST_F(RadSourceTest, FlukaParticleFunctionsHe) {
   EXPECT_GE(particleState->GetEnergy(),1.0);
   EXPECT_LE(particleState->GetEnergy(),1.e6);
   EXPECT_EQ(particleState->GetWeight(),1.0);
-  EXPECT_EQ(particleState->GetFlukaParticleID(),-2);
+  EXPECT_EQ(particleState->GetFlukaParticleID(),-6);
   EXPECT_EQ(particleState->GetChargeNumber(),2);
   EXPECT_EQ(particleState->GetNucleonNumber(),4);
   EXPECT_DOUBLE_EQ(particleState->GetAtomicMass(),4.00260325413);
