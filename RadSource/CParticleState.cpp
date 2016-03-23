@@ -73,10 +73,17 @@ void CParticleState::SetDirection(double dX, double dY, double dZ)
 }
 
 int CParticleState::GetFlukaParticleID() {
-  if ( m_iParticleID == 1 ) {
+  if(nucid == 10010000)
     return 1;
-  } else if ( m_iParticleID > 1 ) {
-    return -2;
-  }
+  if(nucid == 10020000)
+    return -3;
+  if(nucid == 10030000)
+    return -4;
+  if(nucid == 20030000)
+    return -5;
+  if(nucid == 20040000)
+    return -6;
+  // if we get to here then must be heavy ion
+  return -2;
 }
 

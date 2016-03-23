@@ -57,6 +57,12 @@ TEST_F(SourceTest, Sample1) {
   double randoms[10] = {0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4,0.4,0.4};
   int num_randoms = 10;
   sample_source_(randoms,num_randoms,x,y,z,u,v,w,e,wgt,am,id,zz,aa);
+  EXPECT_NE(0.0,x);
+  EXPECT_NE(0.0,y);
+  EXPECT_NE(0.0,z);
+  EXPECT_NE(0.0,u);
+  EXPECT_NE(0.0,v);
+  EXPECT_NE(0.0,w);
 }
 
 //---------------------------------------------------------------------------//
