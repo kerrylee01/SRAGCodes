@@ -191,10 +191,11 @@ void CSource::Sample(std::vector<double> v_dRan, CParticleState* p_ParticleState
   iter_low = std::lower_bound(m_v_dRelativeAbundances.begin(), m_v_dRelativeAbundances.end(), dRandom );
 
   m_v_p_Spectra[iter_low - m_v_dRelativeAbundances.begin() - 1]->Sample(v_dRan[1], v_dRan[2], p_ParticleState);
+
   //
   //Now take care of spatial distribution:
   //
-  std::vector<double> v_dRandom(v_dRan.begin() + 3, v_dRan.end());
+  std::vector<double> v_dRandom(v_dRan.begin() + 3, v_dRan.begin() + 7);
   if(m_p_Spatial != 0x0) {
     if(m_p_Spatial->Sample(v_dRandom) == false) return;
     p_ParticleState->SetPosition(m_p_Spatial->GetPosition());

@@ -106,6 +106,10 @@
 *  GET A NEW PARTICLE      
       CALL SAMPLE_SOURCE(F_RANDS,10,F_XXX,F_YYY,F_ZZZ,F_UUU,F_VVV,F_WWW,
      *                   F_ERG,F_WGT,F_AM,I_II,I_ZZ,I_AA)
+      WRITE(*,*) F_XXX,F_YYY,F_ZZZ,F_UUU,F_VVV,F_WWW
+      WRITE(*,*) F_ERG,F_WGT,F_AM
+      WRITE(*,*) I_II, I_ZZ, I_AA
+      
 *  SET THE NUCLEON NUMBER
       IPROA = I_AA
 *  SET THE ATOMIC NUMBER
@@ -129,7 +133,7 @@
 *  must be =0
       NPFLKA = NPFLKA + 1
 *  Wt is the weight of the particle
-      WTFLK  (NPFLKA) = WGT
+      WTFLK  (NPFLKA) = F_WGT
       WEIPRI = WEIPRI + WTFLK (NPFLKA)
 *  Particle type (1=proton.....). Ijbeam is the type set by the BEAM
 *  card
@@ -152,6 +156,7 @@
          IJHION = IPROZ  * 1000 + IPROA
          IJHION = IJHION * 100 + KXHEAV
          IONID  = IJHION
+         WRITE(*,*) IONID
          CALL DCDION ( IONID )
          CALL SETION ( IONID )
          ILOFLK (NPFLKA) = IJHION
@@ -164,6 +169,7 @@
 *  |  Normal hadron:
       ELSE
          IONID = IJBEAM
+         WRITE(*,*) IONID
          ILOFLK (NPFLKA) = IJBEAM
 *  |  Flag this is prompt radiation
          LRADDC (NPFLKA) = .FALSE.

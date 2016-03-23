@@ -128,9 +128,6 @@ void sample_source_(double *randoms, int& num_randoms, double &xxx, double &yyy,
   vvv = point->GetY();
   www = point->GetZ();
 
-  // set the energy and weight * comes through as energy per nucleon
-  // fluka needs total energy
-  energy = state->GetEnergy() * (double) nucleon_num;
   // statistical weight
   weight = state->GetWeight();
 
@@ -142,5 +139,10 @@ void sample_source_(double *randoms, int& num_randoms, double &xxx, double &yyy,
   nucleon_num = state->GetNucleonNumber();
   atomic_mass = state->GetAtomicMass();
 
+  // set the energy and weight * comes through as energy per nucleon / GeV
+  // fluka needs total energy 
+  energy = state->GetEnergy() * (double) nucleon_num/1000.;
+
   return;
 }
+
