@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Build script to build Fluka with the GCR Source, assumes you are building in place
+
+if [ -z $FLUPRO ] ; then
+   echo "The FLUPRO environment isnt set, do you have Fluka installed?"
+   exit
+fi
+
+if [ -z $FLUFOR ] ; then
+   echo "The FLUFOR environment isnt set, do you have Fluka installed?"
+   exit
+fi
+
+
+if [ -z $SRAGCODE_DIR ] ; then
+    echo "Assuming building in place"
+    export SRAGCODE_DIR=$PWD
+else
+    export SRAGCODE_DIR=$SRAGCODE_DIR
+fi
+
+# build source.f
+$FLUPRO/flutil/fff RadSource/source.f
+# build the executable
+$FLUPRO/flutil/lfluka -L/$FLUPRO/ -l flukahp -L/$SRAGCODE_DIR/lib -a gcrsource -o flukahp RadSource/source.o

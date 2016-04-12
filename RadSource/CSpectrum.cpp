@@ -103,19 +103,19 @@ void CSpectrum::Print()
 
 void CSpectrum::Sample(std::mt19937_64 &gen, CParticleState* p_ParticleState)
 {
-  //std::cout<<"In CSpectrum::Sample(gen, CParticleState)"<<std::endl;
-  std::uniform_real_distribution<> real_dis(m_v_dFluxes[m_iLowIndex], m_v_dFluxes[m_iUpperIndex]);
-  CSpectrum::DoSampling(real_dis(gen), p_ParticleState);
+  std::uniform_real_distribution<> real_dis1(0, 1);
+  double ran1 = real_dis1(gen);
+  double ran2 = real_dis1(gen);
+  CSpectrum::DoSampling(ran1,ran2, p_ParticleState);
 }
 
-void CSpectrum::Sample(double dRan, CParticleState* p_ParticleState)
+void CSpectrum::Sample(double dRan, double dRan2, CParticleState* p_ParticleState)
 {
-  double dRandom;
-  dRandom = (m_v_dFluxes[m_iUpperIndex] - m_v_dFluxes[m_iLowIndex]) * dRan + m_v_dFluxes[m_iLowIndex];
-  CSpectrum::DoSampling(dRandom, p_ParticleState);
+  double dRandom = (m_v_dFluxes[m_iUpperIndex] - m_v_dFluxes[m_iLowIndex]) * dRan + m_v_dFluxes[m_iLowIndex];
+  CSpectrum::DoSampling(dRandom, dRan2, p_ParticleState);
 }
 
-void CSpectrum::DoSampling(double dRan, CParticleState* p_ParticleState)
+void CSpectrum::DoSampling(double dRan, double dRan2, CParticleState* p_ParticleState)
 {
   //std::cout<<"In CSpectrum::DoSampling()"<<std::endl;
   //***************************************************************************
@@ -187,7 +187,7 @@ void CSpectrum::DoSampling(double dRan, CParticleState* p_ParticleState)
   */
   //****************************************************************************
   
-  p_ParticleState->SetParticleID(m_iParticleID);
+  p_ParticleState->SetParticleID(m_iParticleID,dRan2);
   //std::cout<<p_ParticleState->GetParticleID()<<"  "<<p_ParticleState->GetEnergy()<<" "<<p_ParticleState->GetWeight()<<std::endl;
 }
 

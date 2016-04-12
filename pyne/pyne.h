@@ -5082,6 +5082,10 @@ namespace pyne
     /// Decays this material for a given amount of time in seconds
     Material decay(double t);
 
+    /// Samples a random nucid from the material composition
+    /// Returns the nucid of the sampled nuclide/element
+    int sampler(double random, std::string frac_type = "mass");
+
     // Overloaded Operators
     /// Adds mass to a material instance.
     Material operator+ (double);

@@ -8,6 +8,9 @@ PROJECT( gcrsource )
 
 MESSAGE ( STATUS "Building SRAG GCR Source Library" )
 
+FIND_PACKAGE ( HDF5 REQUIRED )
+INCLUDE_DIRECTORIES( ${HDF5_INCLUDE_DIRS} )
+
 # set the source files
 SET(SRAG_SRC  "CRadEnvironment.cpp")
 LIST(APPEND SRAG_SRC "CSource.cpp")
@@ -20,6 +23,7 @@ LIST(APPEND SRAG_SRC "CIsotropic.cpp")
 LIST(APPEND SRAG_SRC "CBeam.cpp")
 LIST(APPEND SRAG_SRC "CSphericalElement.cpp")
 LIST(APPEND SRAG_SRC "Source.cpp")
+LIST(APPEND SRAG_SRC "../pyne/pyne.cpp")
 
 # set the headers
 SET ( SRAG_HEADERS "CBeam.h" )
@@ -33,13 +37,15 @@ LIST(APPEND SRAG_HEADERS "CSpatial.h")
 LIST(APPEND SRAG_HEADERS "CSpectrum.h")
 LIST(APPEND SRAG_HEADERS "CSphericalElement.hpp")
 LIST(APPEND SRAG_HEADERS "Source.h")
-
+LIST(APPEND SRAG_SRC "../pyne/pyne.h")
 
 # set the includes
-INCLUDE_DIRECTORIES( ${INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR})
+INCLUDE_DIRECTORIES( ${INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../pyne/ )
 
 # Create Source Library
-ADD_LIBRARY( gcrsource SHARED ${SRAG_SRC} )
+ADD_LIBRARY( gcrsource STATIC ${SRAG_SRC} )
+
+TARGET_LINK_LIBRARIES(gcrsource ${HDF5_hdf5_hl_LIBRARY} ${HDF5_hdf5_LIBRARY})
 
 # set the headers to install
 SET_TARGET_PROPERTIES( gcrsource PROPERTIES PUBLIC_HEADER "${SRAG_HEADERS}" )

@@ -44,20 +44,15 @@
 *
       LOGICAL LFIRST
 *
-**********************************************************************
-*     Added By Kerry Lee 6/27/2014 from generic source.f started by
-*     Toni Empl in Jan 2003 and modified by Kerry Lee in Jan 2006
-*
-      LOGICAL LMANY, LTOTAL
-
-**********************************************************************
-
       SAVE LFIRST
-**********************************************************************
-*     Added by Kerry Lee 6/27/2014
-      SAVE LMANY, LTOTAL
-**********************************************************************
       DATA LFIRST / .TRUE. /
+
+      INTEGER I,IERR
+      DOUBLE PRECISION F_RANDS(10)
+      DOUBLE PRECISION F_XXX,F_YYY,F_ZZZ
+      DOUBLE PRECISION F_UUU,F_VVV,F_WWW
+      DOUBLE PRECISION F_WGT,F_AM,F_ERG
+      INTEGER I_II,I_AA,I_ZZ
 *======================================================================*
 *                                                                      *
 *                 BASIC VERSION                                        *
@@ -73,7 +68,6 @@
          LUSSRC = .TRUE.
 *  |  *** User initialization ***
 *************************************************************************
-*     Added by Kerry Lee 6/27/2014
          WRITE(*,*) '------------------------------------------'
          WRITE(*,*) 'WHASOU(1) = X ORIGIN (cm)'
          WRITE(*,*) 'WHASOU(2) = Y ORIGIN (cm)'
@@ -82,88 +76,65 @@
          WRITE(*,*) 'WHASOU(5) = Y WIDTH (cm)'
          WRITE(*,*) 'WHASOU(6) = RADIUS of sample sphere (cm)'
          WRITE(*,*) 'WHASOU(7) = Z Shift (cm)'
-         WRITE(*,*) 'WHASOU(8) = Particle ID (int) <= 0 all particles in file'
-         WRITE(*,*) '                               = 1 (hydrogen)'
-         WRITE(*,*) '                               = 2 (helium)'
-         WRITE(*,*) '                               = ... etc '
+         WRITE(*,*) 'WHASOU(8) = Particle ID (int) <= 0 all particles'
+         WRITE(*,*) '            in file'
+         WRITE(*,*) '                           = 1 (hydrogen)'
+         WRITE(*,*) '                           = 2 (helium)'
+         WRITE(*,*) '                           = ... etc '
          WRITE(*,*) 'WHASOU(9) = Source Type (int) <= 0 January Files'
-         WRITE(*,*) '                               = 1 BOM allflux.dat'
-         WRITE(*,*) '                               = 2 BOM2014 allflux.dat'
+         WRITE(*,*) '                           = 1 BOM allflux.dat'
+         WRITE(*,*) '                           = 2 BOM2014 allflux.dat'
          WRITE(*,*) '------------------------------------------'
-c the ionid the user would like
-         IONID = INT(WHASOU(8))
-c the spectral type the user wants
-         ISPECTY = INT(WHASOU(9))
+
          CALL SETUP_SOURCE(
      *         WHASOU(1),WHASOU(2),WHASOU(3),
      *         WHASOU(4),WHASOU(5),WHASOU(6),
-     *         WHASOU(7),IONID,ISPECTY,IERR)
-     *         )
+     *         WHASOU(7),INT(WHASOU(8)),INT(WHASOU(9)),IERR)
 *    Check the error status to make sure that everything is ok to continue
          IF ( IERR .GT. 0 ) CALL FLABRT ( 'source' ,
      +                                    'error from source setup' )
-*************************************************************************
       END IF
-
 *  |
 *  +-------------------------------------------------------------------*
+
+
+*  Sample
+      DO I = 1,10
+         F_RANDS(I) = FLRNDM(XDUMMY)
+      ENDDO
+
+*  GET A NEW PARTICLE      
+      CALL SAMPLE_SOURCE(F_RANDS,10,F_XXX,F_YYY,F_ZZZ,F_UUU,F_VVV,F_WWW,
+     *                   F_ERG,F_WGT,F_AM,I_II,I_ZZ,I_AA)
+      WRITE(*,*) F_XXX,F_YYY,F_ZZZ,F_UUU,F_VVV,F_WWW
+      WRITE(*,*) F_ERG,F_WGT,F_AM
+      WRITE(*,*) I_II, I_ZZ, I_AA
+      
+*  SET THE NUCLEON NUMBER
+      IPROA = I_AA
+*  SET THE ATOMIC NUMBER
+      IPROZ = I_ZZ
+*  WE DO NOT CONSIDER METASTABLES
+      IPROM = 0
+*  TELL FLUKA WE ARE TRANSPORTING IONS
+      IJBEAM = I_II   
+*  SET PARTICLE DIRECTION
+      UBEAM = F_UUU
+      VBEAM = F_VVV
+      WBEAM = F_WWW
+* SET PARTICLE POSITION
+      XBEAM = F_XXX
+      YBEAM = F_YYY
+      ZBEAM = F_ZZZ
 *  Push one source particle to the stack. Note that you could as well
 *  push many but this way we reserve a maximum amount of space in the
 *  stack for the secondaries to be generated
 *  Npflka is the stack counter: of course any time source is called it
 *  must be =0
       NPFLKA = NPFLKA + 1
-**********************************************************************
-*     Added by Kerry Lee 6/27/2014
-*
-      CALL SAMPLE_SOURCE(RANDOMS,0,X_,Y_,Z_
-    *                    CX_,CY_,CZ_,E_,WT_,II,ZZ,AA)
-**********************************************************************
-
 *  Wt is the weight of the particle
-      WTFLK  (NPFLKA) = ONEONE
-**********************************************************************
-*     Added by Kerry Lee 6/27/2014
-*
-      WTFLK  (NPFLKA) = WT_
-**********************************************************************
-
+      WTFLK  (NPFLKA) = F_WGT
       WEIPRI = WEIPRI + WTFLK (NPFLKA)
-
-cc      Added some things to 2005.6 version since -201,-301,-302,-402 are not
-cc      treated as heavy ions.  May have been true with the previous version
-cc      also but I never found it to be a problem. 1/3/2006 KL.
-
-      IDPART = II
-      IPROA = AA
-      IPROZ = ZZ
-
-cc      Need to make sure we return tritium and deuterium
-
-cc      Set IJBEAM to appropriate FLUKA particle ID number based on IDpart
-        IF (IDPART .GE. -6 ) THEN
-           IJBEAM = IDPART
-        ELSE IF ( IDPART .LE. -101 .and. IDPART .GE. -402) THEN
-           IF ( IDPART .EQ. -101 ) THEN
-              IJBEAM = 1
-           ELSE IF (IDpart.EQ. -201 ) THEN
-              IJBEAM = -3
-           ELSE IF (IDpart.EQ. -301 ) THEN
-              IJBEAM = -4
-           ELSE IF (IDpart.EQ. -302 ) THEN
-              IJBEAM = -5
-           ELSE IF (IDpart.EQ. -402 ) THEN
-              IJBEAM = -6
-           ENDIF
-        ELSE IF (IDPART .LT. -402 ) THEN
-           IJBEAM = -2
-cc      ------------ Decode Heavy ion particle Id for 100*A+Z FLUKA number
-           IDPART = ABS ( IDPART )
-           IPROA = IDPART / 100
-           IPROZ = IDPART - 100 * IPROA
-        ENDIF
-**********************************************************************
-
 *  Particle type (1=proton.....). Ijbeam is the type set by the BEAM
 *  card
 *  +-------------------------------------------------------------------*
@@ -185,6 +156,7 @@ cc      ------------ Decode Heavy ion particle Id for 100*A+Z FLUKA number
          IJHION = IPROZ  * 1000 + IPROA
          IJHION = IJHION * 100 + KXHEAV
          IONID  = IJHION
+         WRITE(*,*) IONID
          CALL DCDION ( IONID )
          CALL SETION ( IONID )
          ILOFLK (NPFLKA) = IJHION
@@ -197,27 +169,13 @@ cc      ------------ Decode Heavy ion particle Id for 100*A+Z FLUKA number
 *  |  Normal hadron:
       ELSE
          IONID = IJBEAM
+         WRITE(*,*) IONID
          ILOFLK (NPFLKA) = IJBEAM
 *  |  Flag this is prompt radiation
          LRADDC (NPFLKA) = .FALSE.
 *  |  Group number for "low" energy neutrons, set to 0 anyway
          IGROUP (NPFLKA) = 0
       END IF
-
-************************************************************************
-c     Energy from file is GeV/nucleon, multiply by the nucleon number
-      EP_ = EP_ * AM ( IONID ) / AMC12
-
-c     Check to see if ep_ input is energy or momentum and set Plab_ and
-cc    Ekin_ accordingly.
-*     NOTE: Not sure here if replacing AM (IJBEAM) with AM(IONID) changes
-*           the results here, but needs to be checked.
-      PLAB_ =  EP_
-      IF ( EP_ .LT. 0 )
-     & PLAB_ = SQRT ( -EP_* ( -EP_ + TWOTWO * AM ( IONID )))
-      EKIN_ = SQRT ( PLAB_**2 + AM ( IONID )**2 ) - AM ( IONID )
-
-************************************************************************
 *  |
 *  +-------------------------------------------------------------------*
 *  From this point .....
@@ -246,71 +204,25 @@ cc    Ekin_ accordingly.
 *  Particle age (s)
       AGESTK (NPFLKA) = +ZERZER
       AKNSHR (NPFLKA) = -TWOTWO
-
-**********************************************************************
-*     Added by Kerry Lee 6/27/2014
-      PBEAM = PLAB_
-      TKEFLK (NPFLKA) = EKIN_
-      PMOFLK (NPFLKA) = PLAB_
-*      PMOFLK (NPFLKA) = SQRT ( TKEFLK (NPFLKA) * ( TKEFLK (NPFLKA)
-*     &                       + TWOTWO * AM (IONID) ) )
-**********************************************************************
-*********************************************************************
-*     Commented out since momentum or energy are being read in from file
-*     and not being set by the BEAM card - Kerry Lee 6/27/2014
-*  Kinetic energy of the particle (GeV)
-cc      TKEFLK (NPFLKA) = SQRT ( PBEAM**2 + AM (IONID)**2 ) - AM (IONID)
-*  Particle momentum
-cc      PMOFLK (NPFLKA) = PBEAM
-************************************************************************
-
-*     PMOFLK (NPFLKA) = SQRT ( TKEFLK (NPFLKA) * ( TKEFLK (NPFLKA)
-*    &                       + TWOTWO * AM (IONID) ) )
+*  Kinetic energy of the particle (GeV) - SAMPLED
+      TKEFLK (NPFLKA) = F_ERG
+*  Particle momentum - DETERMINED BY CALC
+      PMOFLK (NPFLKA) = SQRT ( TKEFLK (NPFLKA) * ( TKEFLK (NPFLKA)
+     &                       + TWOTWO * AM (IONID) ) )
 *  Cosines (tx,ty,tz)
-*      Commented this out - will be provided in input file - 12/3/12
-*      TXFLK  (NPFLKA) = UBEAM
-*      TYFLK  (NPFLKA) = VBEAM
-*      TZFLK  (NPFLKA) = WBEAM
+      TXFLK  (NPFLKA) = UBEAM
+      TYFLK  (NPFLKA) = VBEAM
+      TZFLK  (NPFLKA) = WBEAM
 *     TZFLK  (NPFLKA) = SQRT ( ONEONE - TXFLK (NPFLKA)**2
 *    &                       - TYFLK (NPFLKA)**2 )
-************************************************************************
-*  Cosines (cx, cy, cz) and ensure normalized. Added by Kerry Lee 6/27/2014
-      TXFLK  (NPFLKA) = CX_
-      TYFLK  (NPFLKA) = CY_
-      TZFLK  (NPFLKA) = CZ_
-      TZFLK  (NPFLKA) = SQRT ( ONEONE - TXFLK (NPFLKA)**2
-     &                       - TYFLK (NPFLKA)**2 )
-************************************************************************
 *  Polarization cosines:
       TXPOL  (NPFLKA) = -TWOTWO
       TYPOL  (NPFLKA) = +ZERZER
       TZPOL  (NPFLKA) = +ZERZER
 *  Particle coordinates
-*      Commented this out - will be provided in input file - 12/3/12
-*      XFLK   (NPFLKA) = XBEAM
-*      YFLK   (NPFLKA) = YBEAM
-*      ZFLK   (NPFLKA) = ZBEAM
-*      READ(21,*) UUBEAM, VVBEAM, WWBEAM
-************************************************************************
-*  Cosines (tx, ty, tz) added by Kerry Lee 6/27/2014
-      XFLK   (NPFLKA) = X_
-      YFLK   (NPFLKA) = Y_
-      ZFLK   (NPFLKA) = Z_
-************************************************************************
-*      CALL OAUXFI('testfile.txt', 93, 'NEW', IERR)
-*      WRITE(93,*) 'Read in', UUBEAM, VVBEAM, WWBEAM
-*     Changing input so initial point is in *.inp
-*      XFLK   (NPFLKA) = XX
-*      YFLK   (NPFLKA) = YY
-*      ZFLK   (NPFLKA) = ZZ
-*      TXFLK  (NPFLKA) = UUBEAM
-*      TYFLK  (NPFLKA) = VVBEAM
-*      TZFLK  (NPFLKA) = WWBEAM
-*      WRITE(93,*) 'I think I am', TXFLK  (NPFLKA), TYFLK  (NPFLKA),
-*     &    TZFLK  (NPFLKA)
-*     Normalization option - 12/3/12
-*      TZFLK  (NPFLKA) = SQRT ( ONEONE - TXFLK (NPFLKA)**2
-*     &                       - TYFLK (NPFLKA)**2 )
+      XFLK   (NPFLKA) = XBEAM
+      YFLK   (NPFLKA) = YBEAM
+      ZFLK   (NPFLKA) = ZBEAM
 *  Calculate the total kinetic energy of the primaries: don't change
       IF ( ILOFLK (NPFLKA) .EQ. -2 .OR. ILOFLK (NPFLKA) .GT. 100000 )
      &   THEN
@@ -335,14 +247,6 @@ cc      PMOFLK (NPFLKA) = PBEAM
       CMPATH (NPFLKA) = ZERZER
       CALL SOEVSV
       RETURN
-
-************************************************************************
-*  Added by Kerry Lee 6/27/2014
- 99   CONTINUE
-cc   ----------- no more input, tell FLUKA to quit
-      NOMORE = 1
-      RETURN
-************************************************************************
-
 *=== End of subroutine Source =========================================*
       END
+
