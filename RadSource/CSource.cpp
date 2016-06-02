@@ -115,15 +115,42 @@ void CSource::AddBOM2014Spectra(std::string sSpecFile, std::vector<int> v_iPartL
       v_dFlux[uiColumn++].push_back(dFlux);
     }
   }
+
+  std::vector<double> abundances;
+  for ( unsigned int i = 0 ; i < v_dFlux.size() ; i++ ) {
+    double total = 0.0;
+    for ( unsigned int j = 0 ; j < v_dEnergy.size() ; j++ ) {
+      total += v_dFlux[i][j];
+    }
+    abundances.push_back(total);
+  }
+  double total = 0.0;
+  for ( unsigned int i = 0 ; i < v_dFlux.size() ; i++ ) {
+    total += abundances[i];
+  }
+  std::cout << "If doing a piecewise ion simulation, remember to include the normalisation for" << std::endl;
+  std::cout << "your specicies, " << std::endl;
+  for ( unsigned int i = 0 ; i < v_dFlux.size() ; i++ ) {
+    abundances[i] /= total;
+    std::cout << i << " " << abundances[i] << std::endl;
+  }
+  if(v_iPartList.size() == 1) {
+    std::cout << "You are doing a piecewise simulation of species, " << v_iPartList[0] << std::endl;
+    std::cout << "Use a normalization of " << abundances[v_iPartList[0]-1] << std::endl;
+  }
   /*
-  std::vector<std::vector<double> >::iterator iter;
+  st::vector<std::vector<double> >::iterator iter;
   for (iter = v_dFlux.begin(); iter != v_dFlux.end(); ++iter)
     AddSpectrum(new CSpectrum(v_dEnergy, *iter, v_iParticleID[i]), dAbundance);
   */
   for(unsigned int i = 0 ; i < v_dFlux.size(); i++)
     if (v_iPartList.size() == 0 || (std::find(v_iPartList.begin(), v_iPartList.end(), v_iParticleID[i]) != v_iPartList.end()) ){ 
-      std::cout << i << std::endl;
-      AddSpectrum(new CSpectrum(v_dEnergy, v_dFlux[i], v_iParticleID[i]), dAbundance);
+      std::cout << i << " " << dAbundance << std::endl;
+      if ( v_iPartList.size() != 1 ) 
+	AddSpectrum(new CSpectrum(v_dEnergy, v_dFlux[i], v_iParticleID[i]), dAbundance);
+      else
+	AddSpectrum(new CSpectrum(v_dEnergy, v_dFlux[i], v_iPartList[0]), abundances[v_iPartList[0]-1]);
+	
     }
   std::cout << "all done" << std::endl;
 }

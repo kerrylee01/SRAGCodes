@@ -235,3 +235,81 @@ TEST_F(BON2014SourceTest, Sample2) {
    std::cout << id << " " << zz << " " << aa << std::endl;
  }
 }
+
+//---------------------------------------------------------------------------//
+// TEST FIXTURES
+//---------------------------------------------------------------------------//
+class BON2014SourceTestHI : public ::testing::Test
+{
+ protected:
+
+  // initalize variables for each test
+  virtual void SetUp() {
+    std::string env = src_file+"/RadSource/GCRSource/";
+
+    const char *gcr_env_var = env.c_str();
+    const char *env_name ="GCR_SOURCE_PATH";
+    std::cout << env_name << std::endl;
+    std::cout << gcr_env_var << std::endl;
+    int ec = setenv(env_name,gcr_env_var,1);
+
+    double x=0.0;
+    double y=0.0;
+    double z=0.0;
+    double x_w = 20.0;
+    double y_w = 20.0;
+    double rad = 500.0;
+    double z_s = 0.0;
+    int pid = 12;
+    int spectrum_type = 1;
+    int err = 0;
+    setup_source_(x,y,z,x_w,y_w,rad,z_s,pid,spectrum_type,err);
+  }
+};
+
+//---------------------------------------------------------------------------//
+// Test setup outcomes
+TEST_F(BON2014SourceTestHI, SetUpSource) {
+}
+
+//---------------------------------------------------------------------------//
+// Test setup outcomes
+TEST_F(BON2014SourceTestHI, Sample1) {
+  double x,y,z;
+  double u,v,w;
+  double e,wgt;
+  int id,zz,aa;
+  double am;
+
+  // randoms
+  //std::vector<double> randoms={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4};
+  double randoms[10] = {0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4,0.4,0.4};
+  int num_randoms = 10;
+  sample_source_(randoms,num_randoms,x,y,z,u,v,w,e,wgt,am,id,zz,aa);
+  EXPECT_EQ(id,-2);
+  EXPECT_EQ(zz,12);
+  EXPECT_EQ(aa,24);
+  EXPECT_EQ(wgt,1.0);
+}
+
+//---------------------------------------------------------------------------//
+// Test setup outcomes
+TEST_F(BON2014SourceTestHI, Sample2) {
+  double x,y,z;
+  double u,v,w;
+  double e,wgt;
+  int id,zz,aa;
+  double am;
+
+  // randoms
+  //std::vector<double> randoms={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4};
+  double randoms[10] = {0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4,0.4,0.4};
+  int num_randoms = 10;
+  for ( int i = 0 ; i < 10 ; i++ ) {
+   sample_source_(randoms,num_randoms,x,y,z,u,v,w,e,wgt,am,id,zz,aa);
+   EXPECT_EQ(id,-2);
+   EXPECT_EQ(zz,12);
+   EXPECT_EQ(aa,24);
+   EXPECT_EQ(wgt,1.0);
+  }
+}

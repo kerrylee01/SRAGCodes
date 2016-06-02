@@ -66,3 +66,6 @@ ADD_TEST(NAME BONSourceTest.Sample2 COMMAND source_test --gtest_filter=BONSource
 ADD_TEST(NAME BON2014SourceTest.SetUpSource COMMAND source_test --gtest_filter=BONSourceTest.SetUpSource --src_file=${CMAKE_SOURCE_DIR})
 ADD_TEST(NAME BON2014SourceTest.Sample1 COMMAND source_test --gtest_filter=BONSourceTest.Sample1 --src_file=${CMAKE_SOURCE_DIR})
 ADD_TEST(NAME BON2014SourceTest.Sample2 COMMAND source_test --gtest_filter=BONSourceTest.Sample2 --src_file=${CMAKE_SOURCE_DIR})
+ADD_TEST(NAME BON2014SourceTestHI.SetUpSource COMMAND source_test --gtest_filter=BON2014SourceTestHI.SetUpSource --src_file=${CMAKE_SOURCE_DIR})
+ADD_TEST(NAME BON2014SourceTestHI.Sample1 COMMAND source_test --gtest_filter=BON2014SourceTestHI.Sample1 --src_file=${CMAKE_SOURCE_DIR})
+ADD_TEST(NAME BON2014SourceTestHI.Sample2 COMMAND source_test --gtest_filter=BON2014SourceTestHI.Sample2 --src_file=${CMAKE_SOURCE_DIR})

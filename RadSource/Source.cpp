@@ -90,6 +90,9 @@ void setup_source_(double &origin_x, double &origin_y, double &origin_z,
     // add only the requested ion
     if(spectrum_type == 0 ) {
       source->AddSpectrum(new CSpectrum(path+Isotopes[ionid-1]+".dat",ionid));
+    } else if(spectrum_type == 1 ) {
+      std::vector<int> ions = {ionid};
+      source->AddBOM2014Spectra(path+"allflux.dat",ions);
     } else {
       std::cout << "Invalid source number / ion combination" << std::endl;
       error = INVALID_SPECTRAL_TYPE;
