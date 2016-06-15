@@ -34,7 +34,10 @@ class SourceTest : public ::testing::Test
     int pid = 0;
     int spectrum_type = 0;
     int err = 0;
-    setup_source_(x,y,z,x_w,y_w,rad,z_s,pid,spectrum_type,err);
+    char* src_type = "SPHELE";
+    int str_len = 6;
+    setup_source_(x,y,z,x_w,y_w,rad,z_s,pid,spectrum_type,err,
+		  src_type, str_len);
   }
 };
 
@@ -114,7 +117,11 @@ class BONSourceTest : public ::testing::Test
     int pid = 0;
     int spectrum_type = 1;
     int err = 0;
-    setup_source_(x,y,z,x_w,y_w,rad,z_s,pid,spectrum_type,err);
+    char* src_type = "SPHELE";
+    int str_len = 6;
+    setup_source_(x,y,z,x_w,y_w,rad,z_s,pid,spectrum_type,err,
+		  src_type, str_len);
+
   }
 };
 
@@ -189,7 +196,11 @@ class BON2014SourceTest : public ::testing::Test
     int pid = 0;
     int spectrum_type = 2;
     int err = 0;
-    setup_source_(x,y,z,x_w,y_w,rad,z_s,pid,spectrum_type,err);
+    char* src_type = "SPHELE";
+    int str_len = 6;
+    setup_source_(x,y,z,x_w,y_w,rad,z_s,pid,spectrum_type,err,
+		  src_type, str_len);
+
   }
 };
 
@@ -263,7 +274,11 @@ class BON2014SourceTestHI : public ::testing::Test
     int pid = 12;
     int spectrum_type = 1;
     int err = 0;
-    setup_source_(x,y,z,x_w,y_w,rad,z_s,pid,spectrum_type,err);
+    char* src_type = "SPHELE";
+    int str_len = 6;
+    setup_source_(x,y,z,x_w,y_w,rad,z_s,pid,spectrum_type,err,
+		  src_type, str_len);
+
   }
 };
 

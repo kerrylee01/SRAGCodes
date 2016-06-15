@@ -89,7 +89,9 @@
          CALL SETUP_SOURCE(
      *         WHASOU(1),WHASOU(2),WHASOU(3),
      *         WHASOU(4),WHASOU(5),WHASOU(6),
-     *         WHASOU(7),INT(WHASOU(8)),INT(WHASOU(9)),IERR)
+     *         WHASOU(7),INT(WHASOU(8)),INT(WHASOU(9)),IERR,
+     *         SDUSOU)
+         WRITE(*,*) WHASOU(1),IERR,SDUSOU
 *    Check the error status to make sure that everything is ok to continue
          IF ( IERR .GT. 0 ) CALL FLABRT ( 'source' ,
      +                                    'error from source setup' )
