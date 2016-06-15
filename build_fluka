@@ -22,5 +22,6 @@ fi
 
 # build source.f
 $FLUPRO/flutil/fff RadSource/source.f
+cp RadSource/source.o .
 # build the executable
-$FLUPRO/flutil/lfluka -L/$FLUPRO/ -l flukahp -L/$SRAGCODE_DIR/lib -a gcrsource -o flukahp RadSource/source.o
+$FLUPRO/flutil/lfluka -m fluka -L/$FLUPRO/ -a flukahp -L/$SRAGCODE_DIR/lib -a gcrsource -a stdc++ -a hdf5 -a dl -o flukahp RadSource/source.o
