@@ -21,6 +21,10 @@ else
 fi
 
 # build source.f
-$FLUPRO/flutil/fff RadSource/source.f
-# build the executable
-$FLUPRO/flutil/lfluka -L/$FLUPRO/ -l flukahp -L/$SRAGCODE_DIR/lib -a gcrsource -o flukahp RadSource/source.o
+
+#$FLUPRO/flutil/lfluka -o flukahp -L/$SRAGCODE_DIR/lib -l gcrsource -l stdc++ -L$HOME/data/opt/hdf5/hdf5.1.8.13/lib  -L/$FLUPRO/ -m fluka -a flukahp  source.o
+cp RadSource/source.f .
+$FLUPRO/flutil/ldpmqmd -m fluka -L/$SRAGCODE_DIR/lib -a gcrsource -a stdc++ -L$HOME/data/opt/hdf5/hdf5.1.8.13/lib -ahdf5 -adl -o flukahp source.f
+# cleanup
+rm source.f
+rm source.o

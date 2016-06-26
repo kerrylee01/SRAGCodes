@@ -5,6 +5,7 @@
 #include <CParticleState.h>
 #include <CRadEnvironment.h>
 #include <CSphericalElement.hpp>
+#include <CSpherical.hpp>
 #include <CBeam.h>
 
 #include <Source.h>
@@ -15,7 +16,8 @@ bool sample_vector;
 // setup the rn generator
 std::mt19937_64 gen;
 
-CSphericalElement *dist; // Spherical Distribution 
+//CSphericalElement *dist; // Spherical Distribution 
+CSpatial *dist;
 CSource *source; // Source Sample
 CParticleState* state; // Particle State
 CPoint3D *point; // Point
@@ -31,16 +33,33 @@ std::vector<int> particle_id = {1,2,3,4,5,6,7,8,9,10,11,12,13,
 
 // setup the source
 void setup_source_(double &origin_x, double &origin_y, double &origin_z,
-            double &x_width, double &y_width, double &radius,
-            double &z_shift, int &ionid, int &spectrum_type, int &error) {
+		   double &x_width, double &y_width, double &radius,
+		   double &z_shift, int &ionid, int &spectrum_type, int &error,
+		   char* src_type, int &string_length) {
 
   // set error state to ok
   error = OK;
 
-  // make new spherical element class
-  dist = new CSphericalElement(origin_x, origin_y, origin_z,
-                              x_width, y_width, radius,
-                              z_shift);
+  std::string srcType(src_type);
+
+  if( srcType.find("SPHELE") != std::string::npos ) {
+    // make new spherical element class
+    dist = new CSphericalElement(origin_x, origin_y, origin_z,
+				 x_width, y_width, radius,
+				 z_shift);
+    std::cout << "Making new source of type spherical elemetn" << std::endl;
+
+  } else if ( srcType.find("SPHERE") != std::string::npos ) {
+    // make new spherical element class
+    dist = new CSpherical(origin_x);
+    std::cout << "Making new source of type spherical" << std::endl;
+
+  } else {
+    error = SOURCE_TYPE_NOT_SPECIFIED;
+    return;
+  }
+  
+  std::cout << "Making new source of type " << src_type << std::endl;
 
   // new particle state to store sampled data in
   // rather than create a new instance every sample.
@@ -68,6 +87,8 @@ void setup_source_(double &origin_x, double &origin_y, double &origin_z,
     // append the name of the file
     path += "January2003";
   }
+
+  std::cout << ionid << " " << spectrum_type << std::endl;
    
   // add all particles
    if( ionid  <= 0 ) {
@@ -90,6 +111,9 @@ void setup_source_(double &origin_x, double &origin_y, double &origin_z,
     // add only the requested ion
     if(spectrum_type == 0 ) {
       source->AddSpectrum(new CSpectrum(path+Isotopes[ionid-1]+".dat",ionid));
+    } else if(spectrum_type == 1 ) {
+      std::vector<int> ions = {ionid};
+      source->AddBOM2014Spectra(path+"allflux.dat",ions);
     } else {
       std::cout << "Invalid source number / ion combination" << std::endl;
       error = INVALID_SPECTRAL_TYPE;

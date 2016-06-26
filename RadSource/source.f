@@ -69,6 +69,10 @@
 *  |  *** User initialization ***
 *************************************************************************
          WRITE(*,*) '------------------------------------------'
+         WRITE(*,*) 'SDUM      = Source Type, currently SPHERE'
+         WRITE(*,*) '            and SPHELE'
+         WRITE(*,*) 'If SPHELE '
+         WRITE(*,*) 'SDUM = SPHELE'
          WRITE(*,*) 'WHASOU(1) = X ORIGIN (cm)'
          WRITE(*,*) 'WHASOU(2) = Y ORIGIN (cm)'
          WRITE(*,*) 'WHASOU(3) = Z ORIGIN (cm)'
@@ -84,13 +88,33 @@
          WRITE(*,*) 'WHASOU(9) = Source Type (int) <= 0 January Files'
          WRITE(*,*) '                           = 1 BOM allflux.dat'
          WRITE(*,*) '                           = 2 BOM2014 allflux.dat'
+         WRITE(*,*) 'If SPHERE'
+         WRITE(*,*) 'SDUM = SPHERE'
+         WRITE(*,*) 'WHASOU(1) = Radius of Sphere (cm)'
+         WRITE(*,*) 'WHASOU(8) = Particle ID (int) <= 0 all particles'
+         WRITE(*,*) '            in file'
+         WRITE(*,*) '                           = 1 (hydrogen)'
+         WRITE(*,*) '                           = 2 (helium)'
+         WRITE(*,*) '                           = ... etc '
+         WRITE(*,*) 'WHASOU(9) = Source Type (int) <= 0 January Files'
+         WRITE(*,*) '                           = 1 BOM allflux.dat'
+         WRITE(*,*) '                           = 2 BOM2014 allflux.dat'        
          WRITE(*,*) '------------------------------------------'
 
          CALL SETUP_SOURCE(
      *         WHASOU(1),WHASOU(2),WHASOU(3),
      *         WHASOU(4),WHASOU(5),WHASOU(6),
-     *         WHASOU(7),INT(WHASOU(8)),INT(WHASOU(9)),IERR)
-*    Check the error status to make sure that everything is ok to continue
+     *         WHASOU(7),INT(WHASOU(8)),INT(WHASOU(9)),IERR,
+     *         SDUSOU)
+*     Check the error status to make sure that everything is ok to continue
+
+         IF ( IERR .EQ. 1 ) THEN
+            WRITE(*,*) 'GCR_SOURCE_PATH not set as env var'
+         ELSE IF ( IERR .EQ. 2 ) THEN
+            WRITE(*,*) 'Invalid spectral type'
+         ELSE IF ( IERR .EQ. 3 ) THEN
+            WRITE(*,*) 'Source Type not specified'
+         ENDIF
          IF ( IERR .GT. 0 ) CALL FLABRT ( 'source' ,
      +                                    'error from source setup' )
       END IF
@@ -105,11 +129,7 @@
 
 *  GET A NEW PARTICLE      
       CALL SAMPLE_SOURCE(F_RANDS,10,F_XXX,F_YYY,F_ZZZ,F_UUU,F_VVV,F_WWW,
-     *                   F_ERG,F_WGT,F_AM,I_II,I_ZZ,I_AA)
-      WRITE(*,*) F_XXX,F_YYY,F_ZZZ,F_UUU,F_VVV,F_WWW
-      WRITE(*,*) F_ERG,F_WGT,F_AM
-      WRITE(*,*) I_II, I_ZZ, I_AA
-      
+     *                   F_ERG,F_WGT,F_AM,I_II,I_ZZ,I_AA)    
 *  SET THE NUCLEON NUMBER
       IPROA = I_AA
 *  SET THE ATOMIC NUMBER

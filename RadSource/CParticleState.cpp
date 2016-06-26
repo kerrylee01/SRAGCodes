@@ -52,7 +52,6 @@ void CParticleState::SetParticleID(int iParticleID, double random) {
 
   pyne::Material mat = pyne::Material(comp);
   mat = mat.expand_elements();
-
   nucid = mat.sampler(random,"atom");
   charge = pyne::nucname::znum(nucid);
   nucleon_number = pyne::nucname::anum(nucid);
